@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Domain Manager | My Domains</title>
   <style>
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    body { animation: pageFadeIn 0.25s ease; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -1594,9 +1599,15 @@
   });
 
   // Confirm → close modal + show toast
+  function navigateTo(url) {
+    document.body.style.transition = 'opacity 0.25s ease';
+    document.body.style.opacity = '0';
+    setTimeout(() => { window.location.href = url; }, 250);
+  }
+
   modalConfirmBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    window.location.href = 'success.html';
+    navigateTo('success.html');
   });
 
   // Toast close

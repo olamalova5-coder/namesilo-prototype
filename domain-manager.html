@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Domain Manager | My Domains</title>
   <style>
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    body { animation: pageFadeIn 0.25s ease; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -1571,13 +1576,19 @@
     toastTimer = setTimeout(() => successToast.classList.remove('visible'), 4000);
   }
 
+  function navigateTo(url) {
+    document.body.style.transition = 'opacity 0.25s ease';
+    document.body.style.opacity = '0';
+    setTimeout(() => { window.location.href = url; }, 250);
+  }
+
   // Dropdown "On" → navigate to modal page
   autoRenewMenu.querySelectorAll('.dropdown-item').forEach(item => {
     if (item.textContent.trim() === 'On') {
       item.addEventListener('click', (e) => {
         e.stopPropagation();
         autoRenewMenu.classList.remove('open');
-        window.location.href = 'modal.html';
+        navigateTo('modal.html');
       });
     }
   });
