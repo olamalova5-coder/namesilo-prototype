@@ -1572,19 +1572,13 @@
     toastTimer = setTimeout(() => successToast.classList.remove('visible'), 4000);
   }
 
-  function navigateTo(url) {
-    document.body.style.transition = 'opacity 0.25s ease';
-    document.body.style.opacity = '0';
-    setTimeout(() => { window.location.href = url; }, 250);
-  }
-
-  // Dropdown "On" → navigate to modal page
+  // Dropdown "On" → open modal
   autoRenewMenu.querySelectorAll('.dropdown-item').forEach(item => {
     if (item.textContent.trim() === 'On') {
       item.addEventListener('click', (e) => {
         e.stopPropagation();
         autoRenewMenu.classList.remove('open');
-        navigateTo('modal.html');
+        openAutoRenewModal();
       });
     }
   });
@@ -1600,7 +1594,6 @@
   modalConfirmBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     closeAutoRenewModal();
-    // Uncheck all checkboxes and reset bulk UI
     rowCheckboxes.forEach(cb => { cb.checked = false; });
     updateBulkState();
     showSuccessToast();
