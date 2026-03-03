@@ -542,13 +542,14 @@
       position: sticky;
       right: 0;
       background: #fff;
-      box-shadow: -6px 0 12px rgba(0,0,0,0.18);
+      box-shadow: -4px 0 8px rgba(0,0,0,0.08);
       z-index: 1;
       transition: box-shadow 0.2s;
     }
     .domains-table td.col-action { background: #fff; }
     .domains-table tr:hover td.col-action { background: #f8fafc; }
-
+    .table-scroll-wrapper.scrolled-end th.col-action,
+    .table-scroll-wrapper.scrolled-end td.col-action { box-shadow: none; }
 
     .checkbox-cell {
       width: 48px;
@@ -1468,10 +1469,12 @@
 <script>
   // ── Horizontal scroll shadow ──────────────────────────────
   const wrapper = document.querySelector('.table-scroll-wrapper');
-  wrapper.addEventListener('scroll', () => {
+  function updateScrollShadow() {
     const atEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1;
     wrapper.classList.toggle('scrolled-end', atEnd);
-  });
+  }
+  wrapper.addEventListener('scroll', updateScrollShadow);
+  updateScrollShadow();
 
   // ── Bulk selection logic ──────────────────────────────────
   const checkAll       = document.getElementById('checkAll');
