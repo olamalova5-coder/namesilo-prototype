@@ -823,11 +823,13 @@
       border-left: none;
       transform: rotate(45deg);
     }
-    .checkbox:indeterminate {
-      background: #00A6F4;
-      border-color: #00A6F4;
+    .checkbox:indeterminate,
+    .checkbox.is-indeterminate {
+      background: #00A6F4 !important;
+      border-color: #00A6F4 !important;
     }
-    .checkbox:indeterminate::after {
+    .checkbox:indeterminate::after,
+    .checkbox.is-indeterminate::after {
       content: '';
       position: absolute;
       left: 3px;
@@ -1499,12 +1501,15 @@
     if (checked === 0) {
       checkAll.checked       = false;
       checkAll.indeterminate = false;
+      checkAll.classList.remove('is-indeterminate');
     } else if (checked === total) {
       checkAll.checked       = true;
       checkAll.indeterminate = false;
+      checkAll.classList.remove('is-indeterminate');
     } else {
       checkAll.checked       = false;
       checkAll.indeterminate = true;
+      checkAll.classList.add('is-indeterminate');
     }
 
     // Highlight selected rows
