@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain Manager | Domain Management</title>
+  <style>
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: pageFadeIn 0.25s ease; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1d293d;
+      background: #f2f6fa;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ─────────────────────────────── */
+    .sidebar {
+      width: 300px;
+      min-width: 300px;
+      background: #f2f6fa;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 16px 16px;
+    }
+    .logo-text { font-size: 17px; font-weight: 700; color: #0f1c2e; }
+    .logo-text span { color: #0ea5e9; }
+    .sidebar-collapse-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .get-domain-btn {
+      margin: 4px 12px 16px;
+      background: #0ea5e9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: calc(100% - 24px);
+    }
+    .get-domain-btn:hover { background: #0284c7; }
+    .nav-section { padding: 4px 0; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      color: #475569;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 6px;
+      margin: 0 6px;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: #dde8f0; color: #0f172a; }
+    .nav-item svg { flex-shrink: 0; }
+    .nav-chevron { margin-left: auto; color: #94a3b8; font-size: 11px; }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .need-help-wrap { background: rgba(0,132,209,0.05); border-radius: 12px; padding: 4px; }
+    .need-help-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0px 1px 1px -0.5px rgba(2,74,112,0.05), 0px 3px 3px -1.5px rgba(2,74,112,0.05),
+                  0px 6px 6px -3px rgba(2,74,112,0.05), 0px 32px 32px -16px rgba(2,74,112,0.05);
+    }
+    .need-help-text { display: flex; flex-direction: column; gap: 4px; }
+    .need-help-title { font-size: 14px; font-weight: 500; color: #1d293d; line-height: 20px; }
+    .need-help-sub   { font-size: 14px; font-weight: 400; color: #45556c; line-height: 20px; }
+    .go-to-website {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: #45556c; cursor: pointer; text-decoration: none;
+    }
+    .go-to-website:hover { color: #1d293d; }
+    .go-website-icon {
+      width: 28px; height: 28px; border: 1px solid #e0e8ee; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #64748b;
+    }
+
+    /* ─── Main ────────────────────────────────── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ─── Top Header ──────────────────────────── */
+    .top-header {
+      background: #f2f6fa;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13.5px;
+      color: #64748b;
+    }
+    .breadcrumb a { color: #64748b; text-decoration: none; }
+    .breadcrumb a:hover { color: #1d293d; }
+    .breadcrumb .sep { color: #94a3b8; font-size: 12px; }
+    .breadcrumb .current { color: #1d293d; font-weight: 500; }
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-stat { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #475569; }
+    .bell-btn { background: none; border: none; cursor: pointer; color: #64748b; font-size: 18px; }
+    .cart-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer; color: #475569; font-size: 13px; font-weight: 500;
+    }
+    .user-avatar {
+      width: 34px; height: 34px; background: #64748b; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+
+    /* ─── Page Body ───────────────────────────── */
+    .page-body {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+    }
+
+    /* ─── Side Navigation (inner) ─────────────── */
+    .side-nav {
+      width: 224px;
+      min-width: 224px;
+      flex-shrink: 0;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .side-nav-section { display: flex; flex-direction: column; gap: 4px; }
+    .side-nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0 8px;
+      margin-bottom: 2px;
+    }
+    .side-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 13.5px;
+      color: #475569;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 400;
+      transition: background 0.15s, color 0.15s;
+    }
+    .side-nav-item:hover { background: #e8f0f7; color: #1d293d; }
+    .side-nav-item.active {
+      font-weight: 600;
+      color: #1d293d;
+      background: #fff;
+    }
+
+    /* ─── Content Area ────────────────────────── */
+    .content-area {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .page-heading {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d293d;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    /* ─── Cards ───────────────────────────────── */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1d293d;
+      line-height: 1.5;
+    }
+    .card-desc {
+      font-size: 14px;
+      color: #45556c;
+      line-height: 20px;
+      margin-top: 4px;
+    }
+    .card-text { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+    /* ─── Buttons ─────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%),
+                  linear-gradient(90deg, #052f4a 0%, #052f4a 100%);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0px 1px 2px rgba(2,6,24,0.2), 0px 0px 0px 1px #052f4a;
+      line-height: 20px;
+      flex-shrink: 0;
+    }
+    .btn-primary:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
+
+    .btn-outlined-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 17px;
+      height: 42px;
+      background: #fff;
+      color: #052f4a;
+      border: 1px solid #e0e8ee;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      line-height: 24px;
+      flex-shrink: 0;
+    }
+    .btn-outlined-lg:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    .btn-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: #0ea5e9;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+      line-height: 20px;
+    }
+    .btn-text:hover { color: #0284c7; }
+
+    /* ─── Renew dates row ─────────────────────── */
+    .dates-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .dates-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+      color: #45556c;
+      line-height: 20px;
+    }
+
+    /* ─── Toggle Switch ───────────────────────── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 0;
+    }
+    .toggle-label { font-size: 14px; color: #45556c; white-space: nowrap; line-height: 20px; }
+    .toggle-switch {
+      position: relative;
+      width: 35px;
+      height: 21px;
+      background: #1e293b;
+      border-radius: 30px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .toggle-switch.off { background: #cbd5e1; }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border-radius: 7px;
+      top: 3.5px;
+      right: 3.5px;
+      transition: right 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+    .toggle-switch.off::after { right: auto; left: 3.5px; }
+
+    /* ─── Transfer & Lock items ───────────────── */
+    .lock-items { display: flex; flex-direction: column; }
+    .lock-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .lock-item-left { display: flex; gap: 12px; align-items: flex-start; }
+    .lock-icon {
+      width: 32px;
+      height: 32px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .lock-item-text { display: flex; flex-direction: column; gap: 4px; }
+    .lock-item-title { font-size: 14px; font-weight: 500; color: #1d293d; line-height: 20px; }
+    .lock-item-desc  { font-size: 14px; color: #45556c; line-height: 20px; }
+    .lock-item-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .lock-divider {
+      height: 1px;
+      background: #e0e8ee;
+      margin: 16px 0;
+    }
+    .lock-date { font-size: 14px; color: #45556c; line-height: 20px; white-space: nowrap; }
+
+    /* ─── Registry Lock Banner ────────────────── */
+    .banner {
+      background: #e0e8ee;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .banner-left { display: flex; gap: 12px; align-items: flex-start; flex: 1; }
+    .banner-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .banner-icon-inner {
+      width: 50px;
+      height: 49px;
+      background: #94a3b8;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .banner-text { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .banner-title { font-size: 16px; font-weight: 600; color: #1d293d; line-height: 1.5; }
+    .banner-desc  { font-size: 14px; color: #45556c; line-height: 20px; }
+
+    /* ─── Certification Row ───────────────────── */
+    .cert-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* ─── Other Available Domains ─────────────── */
+    .domains-section {
+      background: #e0e8ee;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .domains-section-info { display: flex; flex-direction: column; gap: 24px; flex: 1; }
+    .domains-section-title { font-size: 16px; font-weight: 600; color: #1d293d; line-height: 1.5; }
+    .domains-section-desc  { font-size: 14px; color: #45556c; line-height: 20px; margin-top: 4px; }
+    .domains-checkout-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 13px;
+      background: #052f4a;
+      color: #fff;
+      border: 1px solid #052f4a;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      opacity: 0.5;
+      width: fit-content;
+    }
+    .domain-checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    .domain-check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .domain-check-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background: #fff;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .domain-check-item input[type="checkbox"]:checked {
+      background: #052f4a;
+      border-color: #052f4a;
+    }
+    .domain-check-item input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+    .domain-check-item label {
+      font-size: 14px;
+      color: #1d293d;
+      line-height: 18px;
+      cursor: pointer;
+    }
+
+    /* ─── Info icon ───────────────────────────── */
+    .info-icon-sm {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid #94a3b8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #94a3b8;
+      flex-shrink: 0;
+      font-style: italic;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═════════════════ SIDEBAR ═════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-text">Name<span>Silo</span></span>
+  </div>
+
+  <button class="get-domain-btn">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    Get New Domain
+  </button>
+
+  <nav class="nav-section">
+    <a class="nav-item" href="#">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="domain-manager.html">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Domains
+      <span class="nav-chevron">&#x276F;</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      Services &amp; Add-Ons
+      <span class="nav-chevron">&#x276F;</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Reseller &amp; API
+      <span class="nav-chevron">&#x276F;</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Investor Huboard
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Website Builder
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="need-help-wrap">
+      <div class="need-help-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2C9 2 9.8 5.6 11 7C12.2 8.4 16 9 16 9C16 9 12.2 9.6 11 11C9.8 12.4 9 16 9 16C9 16 8.2 12.4 7 11C5.8 9.6 2 9 2 9C2 9 5.8 8.4 7 7C8.2 5.6 9 2 9 2Z" fill="#0084d1"/>
+          <path d="M19 2C19 2 19.5 4 20.2 4.8C20.9 5.6 23 6 23 6C23 6 20.9 6.4 20.2 7.2C19.5 8 19 10 19 10C19 10 18.5 8 17.8 7.2C17.1 6.4 15 6 15 6C15 6 17.1 5.6 17.8 4.8C18.5 4 19 2 19 2Z" fill="#0084d1" opacity="0.7"/>
+          <path d="M19 15C19 15 19.4 16.6 19.9 17.1C20.4 17.6 22 18 22 18C22 18 20.4 18.4 19.9 18.9C19.4 19.4 19 21 19 21C19 21 18.6 19.4 18.1 18.9C17.6 18.4 16 18 16 18C16 18 17.6 17.6 18.1 17.1C18.6 16.6 19 15 19 15Z" fill="#0084d1" opacity="0.5"/>
+        </svg>
+        <div class="need-help-text">
+          <span class="need-help-title">Need Help?</span>
+          <span class="need-help-sub">Live Support Chat or Ask AI</span>
+        </div>
+      </div>
+    </div>
+    <a class="go-to-website" href="#">
+      <div class="go-website-icon">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      Go to Website
+    </a>
+  </div>
+</aside>
+
+<!-- ═════════════════ MAIN ═════════════════════ -->
+<div class="main">
+
+  <!-- Top Header -->
+  <header class="top-header">
+    <div class="breadcrumb">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <a href="domain-manager.html">Domain Manager</a>
+      <span class="sep">›</span>
+      <a href="#" id="breadcrumb-domain">newdomain.com</a>
+      <span class="sep">›</span>
+      <span class="current">Settings</span>
+    </div>
+    <div class="header-actions">
+      <button class="bell-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="header-stat">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        0,00
+      </div>
+      <div class="header-stat">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        0.00
+      </div>
+      <button class="cart-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Cart
+      </button>
+      <div class="user-avatar">JD</div>
+    </div>
+  </header>
+
+  <!-- Page Body -->
+  <div class="page-body">
+
+    <!-- Inner Side Navigation -->
+    <nav class="side-nav">
+      <div class="side-nav-section">
+        <div class="side-nav-label">Main Settings</div>
+        <a class="side-nav-item active" href="#">Domain Management</a>
+        <a class="side-nav-item" href="#">Domain Contacts &amp; Privacy</a>
+        <a class="side-nav-item" href="#">Subaccount</a>
+      </div>
+      <div class="side-nav-section">
+        <div class="side-nav-label">Technical Setup</div>
+        <a class="side-nav-item" href="#">NameServers</a>
+        <a class="side-nav-item" href="#">DNS</a>
+      </div>
+      <div class="side-nav-section">
+        <div class="side-nav-label">Services</div>
+        <a class="side-nav-item" href="#">Email &amp; Forwarding</a>
+        <a class="side-nav-item" href="#">Website, Hosting &amp; Forwarding</a>
+      </div>
+      <div class="side-nav-section">
+        <div class="side-nav-label">History</div>
+        <a class="side-nav-item" href="#">Recent Actions</a>
+      </div>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="content-area">
+
+      <h1 class="page-heading">Domain Management</h1>
+
+      <!-- ── Renew Card ── -->
+      <div class="card">
+        <div class="card-row">
+          <div class="card-text">
+            <div class="card-title">Renew</div>
+            <div class="card-desc">
+              Manage your domain renewal settings to keep your domain active.<br>
+              Renew manually or enable Auto-Renew for uninterrupted service.
+            </div>
+          </div>
+          <button class="btn-primary">
+            <!-- refresh icon -->
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Renew
+          </button>
+        </div>
+        <div class="dates-row">
+          <div class="dates-col">
+            <span>Created: 2025-10-31</span>
+            <span>Expires: 2026-10-31 (344 days)</span>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">Auto-Renew</span>
+            <div class="toggle-switch" id="autoRenewToggle" onclick="this.classList.toggle('off')"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Transfer & Lock Card ── -->
+      <div class="card">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="card-title">Transfer &amp; Lock</span>
+            <span class="info-icon-sm">i</span>
+          </div>
+          <div class="card-desc">Manage your domain security and transfer settings.</div>
+        </div>
+
+        <div class="lock-items">
+
+          <!-- Authorization Code -->
+          <div class="lock-item">
+            <div class="lock-item-left">
+              <div class="lock-icon">
+                <!-- key icon -->
+                <svg width="16" height="16" viewBox="0 0 15.5429 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.4 5.25714C6.4 3.11112 8.13969 1.37143 10.2857 1.37143C12.4317 1.37143 14.1714 3.11112 14.1714 5.25714C14.1714 7.40316 12.4317 9.14286 10.2857 9.14286C8.13969 9.14286 6.4 7.40316 6.4 5.25714ZM10.2857 0C7.38227 0 5.02857 2.3537 5.02857 5.25714C5.02857 6.46171 5.43369 7.57165 6.11512 8.45816L6.10713 8.46602L3.40568 11.1675C3.40406 11.1691 3.40245 11.1707 3.40084 11.1723C3.39923 11.1739 3.39764 11.1755 3.39605 11.1771L1.57746 12.9957L1.57227 13.0008L1.56713 13.006L1.11513 13.458L0.200841 14.3723C-0.066947 14.6401 -0.066947 15.0743 0.200841 15.3421C0.468629 15.6099 0.902799 15.6099 1.17059 15.3421L2.05717 14.4555L3.40084 15.7992C3.66863 16.0669 4.1028 16.0669 4.37059 15.7992C4.63838 15.5314 4.63838 15.0972 4.37059 14.8294L3.02692 13.4857L3.88574 12.6269L5.22941 13.9706C5.4972 14.2384 5.93137 14.2384 6.19916 13.9706C6.46695 13.7028 6.46695 13.2686 6.19916 13.0008L4.85548 11.6572L7.07687 9.43576L7.08474 9.42777C7.97124 10.1092 9.08117 10.5143 10.2857 10.5143C13.1892 10.5143 15.5429 8.16058 15.5429 5.25714C15.5429 2.3537 13.1892 0 10.2857 0Z" fill="#64748B"/></svg>
+              </div>
+              <div class="lock-item-text">
+                <span class="lock-item-title">Authorization Code</span>
+                <span class="lock-item-desc">Reset authorization code if you want to generate a new one.<br>Get your current or new authorization code via your registrant or WHOIS email.</span>
+              </div>
+            </div>
+            <div class="lock-item-right">
+              <button class="btn-text">Reset Auth Code</button>
+              <button class="btn-text">Get Auth Code</button>
+            </div>
+          </div>
+
+          <div class="lock-divider"></div>
+
+          <!-- Transfer Locked -->
+          <div class="lock-item">
+            <div class="lock-item-left">
+              <div class="lock-icon">
+                <!-- lock icon -->
+                <svg width="16" height="16" fill="none" stroke="#475569" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="lock-item-text">
+                <span class="lock-item-title">Transfer Locked</span>
+                <span class="lock-item-desc">Transfered within last 22 days</span>
+              </div>
+            </div>
+            <div class="lock-item-right">
+              <span class="lock-date">Lock removed: 2025-12-30</span>
+            </div>
+          </div>
+
+          <div class="lock-divider"></div>
+
+          <!-- Domain Lock -->
+          <div class="lock-item">
+            <div class="lock-item-left">
+              <div class="lock-icon">
+                <!-- globe icon -->
+                <svg width="16" height="16" fill="none" stroke="#475569" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
+              <div class="lock-item-text">
+                <span class="lock-item-title">Domain Lock</span>
+                <span class="lock-item-desc">Manage your domain's lock status to allow or prevent unauthorized transfers.</span>
+              </div>
+            </div>
+            <div class="lock-item-right">
+              <span class="toggle-label">Domain Lock</span>
+              <div class="toggle-switch off" id="domainLockToggle" onclick="this.classList.toggle('off')"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Registry Lock Banner ── -->
+      <div class="banner">
+        <div class="banner-left">
+          <div class="banner-icon">
+            <div class="banner-icon-inner">
+              <!-- shield icon -->
+              <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="banner-text">
+            <div class="banner-title">Registry Lock</div>
+            <div class="banner-desc">Registry Lock is an additional Domain Lock service that locks the domain at the registry operator. This helps prevent prevent unauthorized transfers, DNS updates, or deletions</div>
+          </div>
+        </div>
+        <button class="btn-primary">Get Registry Lock</button>
+      </div>
+
+      <!-- ── Domain Registration Certification ── -->
+      <div class="card" style="flex-direction:row;align-items:flex-start;gap:16px;">
+        <div class="card-text">
+          <div class="card-title">Domain Registration Certification</div>
+          <div class="card-desc">View or download your official domain registration certificate for records or ownership verification.</div>
+        </div>
+        <button class="btn-outlined-lg">
+          <!-- download icon -->
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Certification
+        </button>
+      </div>
+
+      <!-- ── Other Available Domains ── -->
+      <div class="domains-section">
+        <div class="domains-section-info">
+          <div>
+            <div class="domains-section-title">Other Available Domains</div>
+            <div class="domains-section-desc">You may be interested in the<br>following domains based upon this<br>domain:</div>
+          </div>
+          <button class="domains-checkout-btn">Check out</button>
+        </div>
+
+        <!-- Column 1 -->
+        <div class="domain-checkbox-list">
+          <div class="domain-check-item"><input type="checkbox" id="d1"><label for="d1">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d2"><label for="d2">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d3"><label for="d3">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d4"><label for="d4">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d5"><label for="d5">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d6"><label for="d6">domain-name ($10.50)</label></div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="domain-checkbox-list">
+          <div class="domain-check-item"><input type="checkbox" id="d7"><label for="d7">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d8"><label for="d8">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d9"><label for="d9">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d10"><label for="d10">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d11"><label for="d11">domain-name ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="d12"><label for="d12">domain-name ($10.50)</label></div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /page-body -->
+</div><!-- /main -->
+
+<script>
+  const domain = new URLSearchParams(window.location.search).get('domain') || 'newdomain.com';
+  document.getElementById('breadcrumb-domain').textContent = domain;
+</script>
+</body>
+</html>

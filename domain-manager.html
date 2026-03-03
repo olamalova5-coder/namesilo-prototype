@@ -636,6 +636,7 @@
       line-height: 1;
       padding: 0;
       transition: background 0.15s, color 0.15s;
+      text-decoration: none;
     }
     .action-btn:hover { background: #f1f5f9; color: #475569; }
 
@@ -1247,7 +1248,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Parked</span></td>
             <td><span class="status-badge sale-listed">Listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1262,7 +1263,7 @@
             <td><span class="plain-text">Off</span></td>
             <td><span class="traffic-tag">Forwarded</span></td>
             <td><span class="status-badge sale-notlisted">Not listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1277,7 +1278,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Custom DNS</span></td>
             <td><span class="status-badge sale-listed">Listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1292,7 +1293,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Parked</span></td>
             <td><span class="status-badge sale-listed">Listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1307,7 +1308,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Parked</span></td>
             <td><span class="status-badge sale-notlisted">Not listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1322,7 +1323,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Forwarded</span></td>
             <td><span class="status-badge sale-listed">Listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1337,7 +1338,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Custom DNS</span></td>
             <td><span class="status-badge sale-notlisted">Not listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1352,7 +1353,7 @@
             <td><span class="plain-text">Off</span></td>
             <td><span class="traffic-tag">Parked</span></td>
             <td><span class="status-badge sale-listed">Listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1367,7 +1368,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Forwarded</span></td>
             <td><span class="status-badge sale-notlisted">Not listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
           <tr class="domain-row">
             <td><input type="checkbox" class="checkbox row-checkbox" /></td>
@@ -1382,7 +1383,7 @@
             <td><span class="plain-text">On</span></td>
             <td><span class="traffic-tag">Custom DNS</span></td>
             <td><span class="status-badge sale-listed">Listed</span></td>
-            <td class="col-action"><button class="action-btn">&#9881;</button></td>
+            <td class="col-action"><a class="action-btn" href="domain-management.html">&#9881;</a></td>
           </tr>
         </tbody>
       </table>
@@ -1606,6 +1607,15 @@
   toastCloseBtn.addEventListener('click', () => {
     clearTimeout(toastTimer);
     successToast.classList.remove('visible');
+  });
+
+  // Set domain name in manage link URL
+  document.querySelectorAll('.domain-row').forEach(row => {
+    const domainName = row.querySelector('.domain-name')?.textContent.trim();
+    const actionLink = row.querySelector('.action-btn');
+    if (domainName && actionLink) {
+      actionLink.href = `domain-management.html?domain=${encodeURIComponent(domainName)}`;
+    }
   });
 </script>
 </body>
