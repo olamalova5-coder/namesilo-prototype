@@ -505,6 +505,111 @@
     }
 
     /* ─── Info icon ───────────────────────────── */
+    /* ─── Content sections ────────────────────── */
+    .content-section { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ─── DNS Section ─────────────────────────── */
+    .dns-block {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+    .dns-block-header { padding: 16px 16px 12px; }
+    .dns-block-title { font-size: 16px; font-weight: 600; color: #1d293d; line-height: 1.5; }
+    .dns-block-desc { font-size: 14px; color: #45556c; line-height: 20px; margin-top: 4px; }
+    .dns-table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-top: 1px solid #e0e8ee; border-bottom: 1px solid #e0e8ee;
+    }
+    .dns-table-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: #1d293d; }
+    .dns-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 21px; height: 21px; padding: 0 6px;
+      background: #f1f5f9; border-radius: 999px; font-size: 12px; font-weight: 500; color: #475569;
+    }
+    .dns-table-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-outline-sm {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px; background: #fff; border: 1px solid #e0e8ee;
+      border-radius: 8px; font-size: 13px; font-weight: 500; color: #1d293d; cursor: pointer; white-space: nowrap;
+    }
+    .btn-outline-sm:hover { background: #f8fafc; border-color: #94a3b8; }
+    .dns-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .dns-table th {
+      padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600;
+      color: #64748b; background: #f8fafc; border-bottom: 1px solid #e0e8ee; white-space: nowrap;
+    }
+    .dns-table td {
+      padding: 12px 12px; border-bottom: 1px solid #f1f5f9;
+      color: #1d293d; vertical-align: middle;
+    }
+    .dns-table tr:last-child td { border-bottom: none; }
+    .dns-table tr:hover td { background: #f8fafc; }
+    .dns-table .col-check { width: 40px; text-align: center; }
+    .dns-table .col-num { width: 40px; color: #64748b; text-align: center; }
+    .dns-table-code {
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #45556c;
+      max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;
+    }
+    .dns-type-badge {
+      display: inline-flex; padding: 2px 8px; background: #f1f5f9;
+      border-radius: 6px; font-size: 12px; font-weight: 500; color: #475569;
+    }
+    .dns-row-actions { display: flex; align-items: center; gap: 4px; }
+    .dns-icon-btn {
+      width: 32px; height: 32px; border: 1px solid #e0e8ee; background: #fff;
+      border-radius: 6px; cursor: pointer; color: #64748b;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dns-icon-btn:hover { background: #f1f5f9; color: #1d293d; }
+    .dns-table-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-top: 1px solid #e0e8ee; font-size: 13px; color: #64748b;
+    }
+    .dns-table-footer-left { display: flex; align-items: center; gap: 8px; }
+    .dns-rows-select {
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
+      border: 1px solid #e0e8ee; border-radius: 6px; background: #fff; font-size: 13px; color: #1d293d; cursor: pointer;
+    }
+    .dns-page-btn {
+      width: 30px; height: 30px; border: 1px solid #e0e8ee; border-radius: 6px;
+      background: #fff; font-size: 13px; color: #1d293d; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .dns-page-btn.active { background: #00A6F4; border-color: #00A6F4; color: #fff; font-weight: 600; }
+    .applied-badge {
+      display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+      background: #dcfce7; border-radius: 999px; font-size: 12px; font-weight: 500; color: #16a34a;
+    }
+    .btn-apply {
+      display: inline-flex; align-items: center; padding: 5px 14px;
+      background: #fff; border: 1px solid #e0e8ee; border-radius: 8px;
+      font-size: 13px; font-weight: 500; color: #1d293d; cursor: pointer; white-space: nowrap;
+    }
+    .btn-apply:hover { background: #f8fafc; border-color: #94a3b8; }
+    .dnssec-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 16px; border-bottom: 1px solid #e0e8ee;
+    }
+    .dnssec-toggle-row { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding-top: 2px; }
+    .dnssec-toggle-label { font-size: 14px; font-weight: 500; color: #1d293d; }
+    .dns-checkbox {
+      appearance: none; -webkit-appearance: none;
+      width: 16px; height: 16px; border: 1.5px solid #cbd5e1; border-radius: 4px;
+      cursor: pointer; background: #fff; position: relative; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .dns-checkbox:checked { background: #00A6F4; border-color: #00A6F4; }
+    .dns-checkbox:checked::after {
+      content: ''; position: absolute; left: 4px; top: 1.5px;
+      width: 5px; height: 8px; border: 2px solid #fff;
+      border-top: none; border-left: none; transform: rotate(45deg);
+    }
+    .tmpl-desc { font-size: 13px; color: #45556c; line-height: 18px; max-width: 400px; }
+    .tmpl-name { font-size: 14px; font-weight: 500; color: #1d293d; }
+
+    /* ─── Info icon ───────────────────────────── */
     .info-icon-sm {
       width: 16px;
       height: 16px;
@@ -627,14 +732,14 @@
     <nav class="side-nav">
       <div class="side-nav-section">
         <div class="side-nav-label">Main Settings</div>
-        <a class="side-nav-item active" href="#">Domain Management</a>
+        <a class="side-nav-item active" href="#" data-section="domain-management">Domain Management</a>
         <a class="side-nav-item" href="#">Domain Contacts &amp; Privacy</a>
         <a class="side-nav-item" href="#">Subaccount</a>
       </div>
       <div class="side-nav-section">
         <div class="side-nav-label">Technical Setup</div>
         <a class="side-nav-item" href="#">NameServers</a>
-        <a class="side-nav-item" href="#">DNS</a>
+        <a class="side-nav-item" href="#" data-section="dns">DNS</a>
       </div>
       <div class="side-nav-section">
         <div class="side-nav-label">Services</div>
@@ -649,7 +754,7 @@
 
     <!-- Content Area -->
     <main class="content-area">
-
+    <div id="section-domain-management" class="content-section">
       <h1 class="page-heading">Domain Management</h1>
 
       <!-- ── Renew Card ── -->
@@ -813,6 +918,299 @@
         </div>
       </div>
 
+    </div><!-- /section-domain-management -->
+
+    <!-- ════════════ DNS SECTION ════════════ -->
+    <div id="section-dns" class="content-section" style="display:none;">
+
+      <h1 class="page-heading">DNS</h1>
+
+      <!-- Premium DNS Banner -->
+      <div class="banner">
+        <div class="banner-left">
+          <div class="banner-icon">
+            <div class="banner-icon-inner">
+              <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="banner-text">
+            <div class="banner-title">Upgrade to Premium DNS</div>
+            <div class="banner-desc">Upgrade to Premium DNS for faster resolution, higher reliability, and added protection.<br>Powered by a global DNS network built for performance and security.</div>
+          </div>
+        </div>
+        <button class="btn-primary">Get Premium DNS</button>
+      </div>
+
+      <!-- DNS Records Block -->
+      <div class="dns-block">
+        <div class="dns-block-header">
+          <div class="dns-block-title">DNS Records</div>
+          <div class="dns-block-desc">DNS records match domain names to IP addresses, enabling web and email functionality. Click the button "Create template" to save a DNS template using the resource records below. This allows you to easily apply custom DNS templates to other domains in your account.</div>
+        </div>
+        <div class="dns-table-header">
+          <div class="dns-table-title">
+            Existing Resource Records
+            <span class="dns-badge">7</span>
+          </div>
+          <div class="dns-table-actions">
+            <button class="btn-outline-sm">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Create DNS template
+            </button>
+            <button class="btn-primary">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add DNS Record
+            </button>
+          </div>
+        </div>
+        <table class="dns-table">
+          <thead>
+            <tr>
+              <th class="col-check"><input type="checkbox" class="dns-checkbox"></th>
+              <th class="col-num">#</th>
+              <th>Host</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Address / Value</th>
+              <th>Distance / Prio</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">1</td>
+              <td>@</td><td></td>
+              <td><span class="dns-type-badge">A</span></td>
+              <td><code class="dns-table-code">192.0.2.15</code></td>
+              <td>—</td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">2</td>
+              <td>@</td><td></td>
+              <td><span class="dns-type-badge">AAAA</span></td>
+              <td><code class="dns-table-code">2021:0db8:85a3:0000:0000:8a2e:0370:7334</code></td>
+              <td>—</td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">3</td>
+              <td>www</td><td></td>
+              <td><span class="dns-type-badge">CNAME</span></td>
+              <td><code class="dns-table-code">example.com</code></td>
+              <td>—</td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">4</td>
+              <td>@</td><td></td>
+              <td><span class="dns-type-badge">MX</span></td>
+              <td><code class="dns-table-code">mail.example.com</code></td>
+              <td>10</td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">5</td>
+              <td>@</td><td></td>
+              <td><span class="dns-type-badge">TXT</span></td>
+              <td><code class="dns-table-code">"v=spf1 include:_spf.google.com ~all"</code></td>
+              <td>—</td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="dns-table-footer">
+          <div class="dns-table-footer-left">
+            Viewing 1 – 7 &nbsp;|&nbsp; Rows per page:
+            <span class="dns-rows-select">All ▾</span>
+          </div>
+          <button class="dns-page-btn active">1</button>
+        </div>
+      </div>
+
+      <!-- DNS Templates Block -->
+      <div class="dns-block">
+        <div class="dns-block-header">
+          <div class="dns-block-title">DNS Templates</div>
+          <div class="dns-block-desc">To make applying DNS changes easier, you can choose from the following DNS templates for popular configurations. Upon choosing a template, you can preview changes made to <span id="dns-domain-name">newdomain.com</span> resource records before applying the changes.</div>
+        </div>
+        <div class="dns-table-header">
+          <div class="dns-table-title">
+            Existing Templates
+            <span class="dns-badge">1</span>
+          </div>
+        </div>
+        <table class="dns-table">
+          <thead>
+            <tr>
+              <th style="width:220px">Template</th>
+              <th>Description</th>
+              <th style="width:108px"></th>
+              <th style="width:89px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="tmpl-name">Secure MarketSites</div>
+                <div style="margin-top:4px"><span class="applied-badge">
+                  <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  Applied
+                </span></div>
+              </td>
+              <td><div class="tmpl-desc">This template configures your domain for use with the NameSilo Marketplace system which allows you to easily create unlimited customized sites to showcase and sell domains registered with any registrar.</div></td>
+              <td></td>
+              <td><button class="btn-apply">Apply</button></td>
+            </tr>
+            <tr>
+              <td><div class="tmpl-name">Secure Parking/Web Forwarding</div></td>
+              <td><div class="tmpl-desc">This is the default template applied to all new domains registered at NameSilo. This template allows our web forwarding and domain parking services to work properly.</div></td>
+              <td></td>
+              <td><button class="btn-apply">Apply</button></td>
+            </tr>
+            <tr>
+              <td><div class="tmpl-name">Secure WWW Redirect</div></td>
+              <td><div class="tmpl-desc">This template simply ensures that the "naked" domain (i.e. example.com) redirects to the www hostname (i.e. www.example.com).</div></td>
+              <td></td>
+              <td><button class="btn-apply">Apply</button></td>
+            </tr>
+            <tr>
+              <td><div class="tmpl-name">Domain Parking/Web Forwarding</div></td>
+              <td><div class="tmpl-desc">This is the default template applied to all new domains registered at NameSilo. This template allows our web forwarding and domain parking services to work properly.</div></td>
+              <td></td>
+              <td><button class="btn-apply">Apply</button></td>
+            </tr>
+            <tr>
+              <td><div class="tmpl-name">My Template</div></td>
+              <td><div class="tmpl-desc">[... some description for my template...]</div></td>
+              <td><div class="dns-row-actions">
+                <button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+              </div></td>
+              <td><button class="btn-apply">Apply</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="dns-table-footer">
+          <div class="dns-table-footer-left">Viewing 1 – 25 &nbsp;|&nbsp; Rows per page: <span class="dns-rows-select">All ▾</span></div>
+          <button class="dns-page-btn active">1</button>
+        </div>
+      </div>
+
+      <!-- DNSSEC Block -->
+      <div class="dns-block">
+        <div class="dnssec-header">
+          <div>
+            <div class="dns-block-title">DNSSEC</div>
+            <div class="dns-block-desc">DNSSEC strengthens authentication in DNS using digital signatures based on public key cryptography.</div>
+          </div>
+          <div class="dnssec-toggle-row">
+            <span class="dnssec-toggle-label">DNSSEC</span>
+            <div class="toggle-switch" onclick="this.classList.toggle('off')"></div>
+          </div>
+        </div>
+        <div class="dns-table-header">
+          <div class="dns-table-title">
+            Existing DS Records
+            <span class="dns-badge">5</span>
+          </div>
+          <div class="dns-table-actions">
+            <button class="btn-primary">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add DS Record
+            </button>
+          </div>
+        </div>
+        <table class="dns-table">
+          <thead>
+            <tr>
+              <th class="col-check"><input type="checkbox" class="dns-checkbox"></th>
+              <th class="col-num">#</th>
+              <th>Key Tag</th>
+              <th>Algorithm</th>
+              <th>Digest Type</th>
+              <th>Digest</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">1</td>
+              <td>34567</td><td>RSA/SHA-256 (8)</td><td>SHA-256 (2)</td>
+              <td><code class="dns-table-code">a3b0c44298fc1c149afb f46c996fb92427ae41e4649b934ca495991b7852b855</code></td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">2</td>
+              <td>34567</td><td>RSA/SHA-256 (8)</td><td>SHA-256 (2)</td>
+              <td><code class="dns-table-code">a3b0c44298fc1c149afbf46c996fb92427ae41e4649b934ca495991b7852b866</code></td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">4</td>
+              <td>34567</td><td>RSA/SHA-256 (8)</td><td>SHA-256 (2)</td>
+              <td><code class="dns-table-code">b200c44298fc1c149afbf46c996fb92427ae41e4649b934ca495991b7852b877</code></td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">3</td>
+              <td>34567</td><td>RSA/SHA-256 (8)</td><td>SHA-256 (2)</td>
+              <td><code class="dns-table-code">a2b0c44298fc1c149afbf46c996fb92427ae41e4649b934ca495991b7852b888</code></td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+            <tr>
+              <td class="col-check"><input type="checkbox" class="dns-checkbox"></td>
+              <td class="col-num">5</td>
+              <td>34567</td><td>RSA/SHA-256 (8)</td><td>SHA-256 (2)</td>
+              <td><code class="dns-table-code">a4b0c44298fc1c149afbf46c996fb92427ae41e4649b934ca495991b7852b899</code></td>
+              <td><div class="dns-row-actions"><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="dns-icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="dns-table-footer">
+          <div class="dns-table-footer-left">Viewing 1 – 15 &nbsp;|&nbsp; Rows per page: <span class="dns-rows-select">All ▾</span></div>
+          <button class="dns-page-btn active">1</button>
+        </div>
+      </div>
+
+      <!-- Other Available Domains (same) -->
+      <div class="domains-section">
+        <div class="domains-section-info">
+          <div>
+            <div class="domains-section-title">Other Available Domains</div>
+            <div class="domains-section-desc">You may be interested in the<br>following domains based upon this<br>domain:</div>
+          </div>
+          <button class="domains-checkout-btn">Check out</button>
+        </div>
+        <div class="domain-checkbox-list">
+          <div class="domain-check-item"><input type="checkbox" id="dd1"><label for="dd1">newdomain.net ($10.50)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd2"><label for="dd2">newdomain.org ($9.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd3"><label for="dd3">newdomain.io ($32.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd4"><label for="dd4">newdomain.co ($25.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd5"><label for="dd5">newdomain.store ($4.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd6"><label for="dd6">newdomain.shop ($3.99)</label></div>
+        </div>
+        <div class="domain-checkbox-list">
+          <div class="domain-check-item"><input type="checkbox" id="dd7"><label for="dd7">newdomain.app ($18.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd8"><label for="dd8">newdomain.dev ($14.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd9"><label for="dd9">newdomain.info ($5.49)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd10"><label for="dd10">newdomain.online ($4.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd11"><label for="dd11">newdomain.tech ($9.99)</label></div>
+          <div class="domain-check-item"><input type="checkbox" id="dd12"><label for="dd12">newdomain.site ($3.49)</label></div>
+        </div>
+      </div>
+
+    </div><!-- /section-dns -->
+
     </main>
   </div><!-- /page-body -->
 </div><!-- /main -->
@@ -820,6 +1218,24 @@
 <script>
   const domain = new URLSearchParams(window.location.search).get('domain') || 'newdomain.com';
   document.getElementById('breadcrumb-domain').textContent = domain;
+  if (document.getElementById('dns-domain-name')) {
+    document.getElementById('dns-domain-name').textContent = domain;
+  }
+
+  // Section switching
+  document.querySelectorAll('.side-nav-item[data-section]').forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      const target = item.dataset.section;
+      document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+      document.getElementById('section-' + target).style.display = 'flex';
+      document.querySelectorAll('.side-nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      // Update breadcrumb current page
+      const label = { 'domain-management': 'Settings', 'dns': 'DNS' };
+      document.querySelector('.breadcrumb .current').textContent = label[target] || 'Settings';
+    });
+  });
 </script>
 </body>
 </html>
