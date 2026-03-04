@@ -257,19 +257,20 @@
       gap: 8px;
       height: 36px;
       padding: 0 13px;
-      background: #fff;
-      color: #1d293d;
-      border: 1px solid #e0e8ee;
-      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%),
+                  linear-gradient(90deg, #052f4a 0%, #052f4a 100%);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       white-space: nowrap;
-      box-shadow: none;
+      box-shadow: 0px 1px 2px rgba(2,6,24,0.2), 0px 0px 0px 1px #052f4a;
       line-height: 20px;
       flex-shrink: 0;
     }
-    .btn-primary:hover { background: #f8fafc; border-color: #94a3b8; }
+    .btn-primary:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
 
     .btn-outlined-lg {
       display: inline-flex;
@@ -535,15 +536,6 @@
       border-radius: 8px; font-size: 13px; font-weight: 500; color: #1d293d; cursor: pointer; white-space: nowrap;
     }
     .btn-outline-sm:hover { background: #f8fafc; border-color: #94a3b8; }
-    .btn-blue {
-      display: inline-flex; align-items: center; gap: 6px;
-      height: 36px; padding: 0 13px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%), linear-gradient(90deg, #052f4a 0%, #052f4a 100%);
-      color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
-      font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap;
-      box-shadow: 0px 1px 2px rgba(2,6,24,0.2), 0px 0px 0px 1px #052f4a; line-height: 20px; flex-shrink: 0;
-    }
-    .btn-blue:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
     .dns-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     .dns-table th {
       padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600;
@@ -1128,7 +1120,7 @@
             <span class="dns-badge">5</span>
           </div>
           <div class="dns-table-actions">
-            <button class="btn-blue">
+            <button class="btn-primary">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Add DS Record
             </button>
