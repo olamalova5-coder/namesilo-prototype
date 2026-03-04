@@ -543,7 +543,8 @@
       height: 36px; padding: 0 13px; font-size: 14px; font-weight: 500; cursor: pointer;
       line-height: 20px; box-shadow: 0px 1px 2px rgba(2,6,24,0.2), 0px 0px 0px 1px #052f4a;
     }
-    .modal-btn-confirm:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
+    .modal-btn-confirm:hover:not(:disabled) { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
+    .modal-btn-confirm:disabled { background: #e2e8f0; color: #94a3b8; border-color: #e2e8f0; box-shadow: none; cursor: not-allowed; }
     .dns-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     .dns-table th {
       padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600;
@@ -1264,11 +1265,11 @@
     <!-- Template Name -->
     <div style="margin-bottom:14px;">
       <label style="display:block; font-size:13px; font-weight:500; color:#1d293d; margin-bottom:6px;">Template Name*</label>
-      <input type="text" placeholder="Enter a template name" style="width:100%; box-sizing:border-box; height:40px; border:1px solid #e0e8ee; border-radius:8px; padding:0 12px; font-size:14px; color:#1d293d; outline:none;" onfocus="this.style.borderColor='#00A6F4'" onblur="this.style.borderColor='#e0e8ee'">
+      <input id="tmplName" type="text" placeholder="Enter a template name" style="width:100%; box-sizing:border-box; height:40px; border:1px solid #e0e8ee; border-radius:8px; padding:0 12px; font-size:14px; color:#1d293d; outline:none;" onfocus="this.style.borderColor='#00A6F4'" onblur="this.style.borderColor='#e0e8ee'">
     </div>
     <!-- Description -->
     <div style="margin-bottom:18px;">
-      <textarea placeholder="Describe what this DNS template is for ..." rows="4" style="width:100%; box-sizing:border-box; border:1px solid #e0e8ee; border-radius:8px; padding:10px 12px; font-size:14px; color:#1d293d; resize:vertical; outline:none; font-family:inherit;" onfocus="this.style.borderColor='#00A6F4'" onblur="this.style.borderColor='#e0e8ee'"></textarea>
+      <textarea id="tmplDesc" placeholder="Describe what this DNS template is for ..." rows="4" style="width:100%; box-sizing:border-box; border:1px solid #e0e8ee; border-radius:8px; padding:10px 12px; font-size:14px; color:#1d293d; resize:vertical; outline:none; font-family:inherit;" onfocus="this.style.borderColor='#00A6F4'" onblur="this.style.borderColor='#e0e8ee'"></textarea>
     </div>
     <!-- Records hint -->
     <p style="font-size:13px; color:#64748b; margin:0 0 14px;">Use the checkboxes to select DNS records for the template. You can also create a new DNS record to include it.</p>
@@ -1307,7 +1308,7 @@
     <!-- Footer buttons -->
     <div style="display:flex; justify-content:flex-end; gap:10px;">
       <button id="cancelDnsTemplateModal" class="btn-outline-sm">Cancel</button>
-      <button class="modal-btn-confirm" style="display:inline-flex; align-items:center;">Save Template</button>
+      <button id="saveTemplateBtn" class="modal-btn-confirm" disabled style="display:inline-flex; align-items:center;">Save Template</button>
     </div>
   </div>
 </div>
@@ -1323,16 +1324,31 @@
     document.getElementById('cancelDnsTemplateModal').addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-    // Select all / count
+    // Select all / count / validation
     const checkAll = document.getElementById('tmplCheckAll');
     const rowChecks = document.querySelectorAll('.tmpl-row-check');
     const countEl = document.getElementById('tmplSelectedCount');
+    const nameInput = document.getElementById('tmplName');
+    const descInput = document.getElementById('tmplDesc');
+    const saveBtn = document.getElementById('saveTemplateBtn');
+
+    function validate() {
+      const hasName = nameInput.value.trim().length > 0;
+      const hasDesc = descInput.value.trim().length > 0;
+      const hasRecord = [...rowChecks].some(c => c.checked);
+      saveBtn.disabled = !(hasName && hasDesc && hasRecord);
+    }
+
     function updateCount() {
       const n = [...rowChecks].filter(c => c.checked).length;
       countEl.textContent = n + ' selected';
       checkAll.checked = n === rowChecks.length;
       checkAll.indeterminate = n > 0 && n < rowChecks.length;
+      validate();
     }
+
+    nameInput.addEventListener('input', validate);
+    descInput.addEventListener('input', validate);
     checkAll.addEventListener('change', () => {
       rowChecks.forEach(c => c.checked = checkAll.checked);
       updateCount();
