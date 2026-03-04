@@ -545,6 +545,20 @@
     }
     .modal-btn-confirm:hover:not(:disabled) { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
     .modal-btn-confirm:disabled { background: #e2e8f0; color: #94a3b8; border-color: #e2e8f0; box-shadow: none; cursor: not-allowed; }
+    .toast-notification {
+      position: fixed; top: 82px; right: 32px; width: 350px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%),
+                  linear-gradient(90deg, #e3f7ec 0%, #e3f7ec 100%);
+      box-shadow: 0px 1px 2px rgba(2,6,24,0.06), 0px 0px 0px 1px rgba(0,188,125,0.24);
+      z-index: 2000; display: none; overflow: hidden;
+    }
+    .toast-notification.visible { display: block; }
+    .toast-inner { display: flex; align-items: center; gap: 12px; padding: 16px; }
+    .toast-icon { flex-shrink: 0; width: 20px; height: 20px; display: flex; align-items: flex-start; justify-content: center; padding-top: 2px; }
+    .toast-text { flex: 1; font-size: 14px; font-weight: 500; color: #1d293d; line-height: 20px; }
+    .toast-close { flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; border-radius: 12px; color: #64748b; padding: 0; }
+    .toast-close:hover { background: rgba(0,0,0,0.06); }
     #createDnsTemplateModal tbody tr:hover td { background: #f8fafc; }
     #createDnsTemplateModal tbody td { border-bottom: none; }
     .save-tmpl-wrapper { position: relative; display: inline-flex; }
@@ -1283,12 +1297,22 @@
 </script>
 
 <!-- Template Saved Toast -->
-<div id="tmplSavedToast" style="display:none; position:fixed; top:82px; right:32px; z-index:2000; background:linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%), linear-gradient(90deg, #e3f7ec 0%, #e3f7ec 100%); border-radius:12px; box-shadow:0px 1px 2px rgba(2,6,24,0.06), 0px 0px 0px 1px rgba(0,188,125,0.24); padding:0 16px; align-items:center; gap:12px; width:350px; height:72px; box-sizing:border-box;">
-  <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><circle cx="7.5" cy="7.5" r="7.5" fill="#00bc7d"/><path d="M4.5 7.5L6.5 9.5L10.5 5.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <span style="font-size:14px; color:#1d293d; line-height:1.45; flex:1;">The template "<strong id="tmplSavedName"></strong>" has been successfully saved</span>
-  <button id="tmplSavedToastClose" style="background:none; border:none; cursor:pointer; color:#94a3b8; padding:2px; display:flex; align-items:center; flex-shrink:0;">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-  </button>
+<div class="toast-notification" id="tmplSavedToast">
+  <div class="toast-inner">
+    <div class="toast-icon">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <circle cx="7.5" cy="7.5" r="7.5" fill="#00bc7d"/>
+        <path d="M4.5 7.5L6.5 9.5L10.5 5.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <p class="toast-text">The template "<strong id="tmplSavedName"></strong>" has been successfully saved</p>
+    <button class="toast-close" id="tmplSavedToastClose">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <line x1="1" y1="1" x2="9" y2="9"/>
+        <line x1="9" y1="1" x2="1" y2="9"/>
+      </svg>
+    </button>
+  </div>
 </div>
 
 <!-- Create DNS Template Modal -->
@@ -1377,11 +1401,11 @@
     let toastTimer;
     function showToast(name) {
       toastName.textContent = name;
-      toast.style.display = 'flex';
+      toast.classList.add('visible');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 4000);
+      toastTimer = setTimeout(() => { toast.classList.remove('visible'); }, 4000);
     }
-    document.getElementById('tmplSavedToastClose').addEventListener('click', () => { toast.style.display = 'none'; clearTimeout(toastTimer); });
+    document.getElementById('tmplSavedToastClose').addEventListener('click', () => { toast.classList.remove('visible'); clearTimeout(toastTimer); });
     document.getElementById('saveTemplateBtn').addEventListener('click', () => {
       const name = document.getElementById('tmplName').value.trim();
       closeModal();
