@@ -1282,6 +1282,15 @@
   });
 </script>
 
+<!-- Template Saved Toast -->
+<div id="tmplSavedToast" style="display:none; position:fixed; top:20px; right:20px; z-index:2000; background:#fff; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:14px 16px; display:none; align-items:center; gap:12px; min-width:280px; max-width:360px;">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><circle cx="11" cy="11" r="11" fill="#22c55e"/><path d="M6.5 11.5l3 3 6-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span style="font-size:14px; color:#1d293d; line-height:1.45; flex:1;">The template "<strong id="tmplSavedName"></strong>" has been successfully saved</span>
+  <button id="tmplSavedToastClose" style="background:none; border:none; cursor:pointer; color:#94a3b8; padding:2px; display:flex; align-items:center; flex-shrink:0;">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
 <!-- Create DNS Template Modal -->
 <div id="createDnsTemplateModal" style="display:none; position:fixed; inset:0; background:rgba(30,41,59,0.45); z-index:1000; align-items:center; justify-content:center;">
   <div style="background:#fff; border-radius:16px; width:900px; max-width:95vw; max-height:90vh; overflow:auto; box-shadow:0 8px 40px rgba(0,0,0,0.18); padding:28px 28px 24px;">
@@ -1361,6 +1370,23 @@
     document.getElementById('closeDnsTemplateModal').addEventListener('click', closeModal);
     document.getElementById('cancelDnsTemplateModal').addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+    // Toast
+    const toast = document.getElementById('tmplSavedToast');
+    const toastName = document.getElementById('tmplSavedName');
+    let toastTimer;
+    function showToast(name) {
+      toastName.textContent = name;
+      toast.style.display = 'flex';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+    document.getElementById('tmplSavedToastClose').addEventListener('click', () => { toast.style.display = 'none'; clearTimeout(toastTimer); });
+    document.getElementById('saveTemplateBtn').addEventListener('click', () => {
+      const name = document.getElementById('tmplName').value.trim();
+      closeModal();
+      showToast(name);
+    });
 
     // Select all / count / validation
     const checkAll = document.getElementById('tmplCheckAll');
