@@ -545,6 +545,32 @@
     }
     .modal-btn-confirm:hover:not(:disabled) { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 100%), #073d61; }
     .modal-btn-confirm:disabled { background: #e2e8f0; color: #94a3b8; border-color: #e2e8f0; box-shadow: none; cursor: not-allowed; }
+    .save-tmpl-wrapper { position: relative; display: inline-flex; }
+    .save-tmpl-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 10px);
+      right: 0;
+      width: 180px;
+      background: #1d293d;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.45;
+      border-radius: 8px;
+      padding: 9px 12px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .save-tmpl-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 16px;
+      border: 6px solid transparent;
+      border-top-color: #1d293d;
+    }
+    .save-tmpl-wrapper:hover .save-tmpl-tooltip { display: block; }
+    .save-tmpl-wrapper:has(button:not(:disabled)):hover .save-tmpl-tooltip { display: none; }
     .dns-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     .dns-table th {
       padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600;
@@ -1308,7 +1334,10 @@
     <!-- Footer buttons -->
     <div style="display:flex; justify-content:flex-end; gap:10px;">
       <button id="cancelDnsTemplateModal" class="btn-outline-sm">Cancel</button>
-      <button id="saveTemplateBtn" class="modal-btn-confirm" disabled style="display:inline-flex; align-items:center;">Save Template</button>
+      <div class="save-tmpl-wrapper">
+        <button id="saveTemplateBtn" class="modal-btn-confirm" disabled style="display:inline-flex; align-items:center;">Save Template</button>
+        <div class="save-tmpl-tooltip">Select at least one record and fill in all required fields.</div>
+      </div>
     </div>
   </div>
 </div>
