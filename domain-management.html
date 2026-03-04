@@ -1249,7 +1249,7 @@
 
 <!-- Create DNS Template Modal -->
 <div id="createDnsTemplateModal" style="display:none; position:fixed; inset:0; background:rgba(30,41,59,0.45); z-index:1000; align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:16px; width:620px; max-width:95vw; max-height:90vh; overflow:auto; box-shadow:0 8px 40px rgba(0,0,0,0.18); padding:28px 28px 24px;">
+  <div style="background:#fff; border-radius:16px; width:900px; max-width:95vw; max-height:90vh; overflow:auto; box-shadow:0 8px 40px rgba(0,0,0,0.18); padding:28px 28px 24px;">
     <!-- Header -->
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
       <span style="font-size:18px; font-weight:600; color:#1d293d;">Create DNS Template</span>
@@ -1283,8 +1283,8 @@
       <a href="#" style="font-size:13px; color:#00A6F4; font-weight:500; text-decoration:none;">Add DNS Record</a>
     </div>
     <!-- Records table -->
-    <div style="border:1px solid #e0e8ee; border-radius:10px; overflow:hidden; margin-bottom:24px;">
-      <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <div style="border:1px solid #e0e8ee; border-radius:10px; overflow-x:auto; margin-bottom:24px;">
+      <table style="width:100%; min-width:640px; border-collapse:collapse; font-size:13px;">
         <thead>
           <tr style="background:#f8fafc;">
             <th style="padding:10px 12px; text-align:left; width:36px;"><input type="checkbox" class="dns-checkbox" id="tmplCheckAll" checked></th>
