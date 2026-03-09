@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain Manager | Transfer</title>
+  <style>
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      animation: pageFadeIn 0.25s ease;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1d293d;
+      background: #e2eaf2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* ─── Mobile Frame ─────────────────────────────── */
+    .mobile-frame {
+      width: 375px;
+      min-height: 100vh;
+      background: #f6faff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ─── Top Navigation ───────────────────────────── */
+    .top-nav {
+      background: #f6faff;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 0 0 8px 8px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .nav-logo img {
+      height: 22px;
+      width: auto;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 132, 209, 0.05);
+      border: 1px solid rgba(2, 74, 112, 0.05);
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .nav-icon-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #45556c;
+    }
+
+    .nav-hamburger {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 1px solid #f1f5f9;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(0,132,209,0.05), 0 1px 1px rgba(2,74,112,0.05), 0 2px 2px rgba(0,132,209,0.05), 0 3px 3px rgba(2,74,112,0.05);
+    }
+
+    /* ─── Main Content ─────────────────────────────── */
+    .content {
+      flex: 1;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 96px;
+      overflow-y: auto;
+    }
+
+    /* ─── Page Title ───────────────────────────────── */
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 32px;
+    }
+
+    .page-title h1 {
+      font-size: 24px;
+      font-weight: 500;
+      color: #1d293d;
+      line-height: 32px;
+      white-space: nowrap;
+      font-family: 'Inter Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    }
+
+    /* ─── Tabs ─────────────────────────────────────── */
+    .tablist {
+      display: flex;
+      align-items: flex-end;
+      border-bottom: 1px solid #e0e8ee;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      height: 46px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #45556c;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .tab.active {
+      font-weight: 600;
+      color: #052f4a;
+      border-bottom: 2px solid #00a6f4;
+      margin-bottom: -1px;
+    }
+
+    .tab svg { flex-shrink: 0; }
+
+    /* ─── Section Header ───────────────────────────── */
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 16px;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1d293d;
+      line-height: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 21px;
+      min-width: 21px;
+      border-radius: 10.5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #45556c;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%), #f8fafc;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.05), 0 0 0 1px #e0e8ee;
+      padding: 0 4px;
+    }
+
+    /* ─── Toggle Buttons ───────────────────────────── */
+    .selectbutton {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px;
+      background: #f0f9ff;
+      border: 1px solid #e2eff9;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    .toggle-btn:first-child {
+      border-right: none;
+      border-radius: 8px 0 0 8px;
+    }
+
+    .toggle-btn:last-child {
+      border-left: none;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .toggle-btn .toggle-inner {
+      padding: 4px 12px;
+      border-radius: 6px;
+      line-height: 20px;
+    }
+
+    .toggle-btn.active .toggle-inner {
+      background: white;
+      color: #0f172a;
+      box-shadow: 0 0 0 1px rgba(0,132,209,0.05), 0 1px 1px rgba(2,74,112,0.05), 0 2px 2px rgba(0,132,209,0.05), 0 3px 3px rgba(2,74,112,0.05), 0 5px 5px rgba(2,74,112,0.05), 0 12px 12px rgba(2,74,112,0.05);
+    }
+
+    /* ─── Empty State Card ─────────────────────────── */
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px rgba(2,74,112,0.05), 0 1px 1px -0.5px rgba(2,74,112,0.05), 0 2px 2px -1px rgba(0,132,209,0.05), 0 10px 10px -5px rgba(2,74,112,0.05);
+      overflow: hidden;
+    }
+
+    .empty-state {
+      background: #f6faff;
+      border-radius: 12px;
+      padding: 16px 16px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .empty-state-illustration {
+      width: 267px;
+      height: 102px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+
+    .illustration-circle {
+      position: absolute;
+      width: 204px;
+      height: 204px;
+      top: 45px;
+      left: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,166,244,0.08) 0%, rgba(0,166,244,0.03) 50%, transparent 70%);
+    }
+
+    .illustration-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 63px;
+      background: linear-gradient(to bottom, rgba(246,250,255,0), #f6faff);
+    }
+
+    .illustration-icon {
+      position: relative;
+      z-index: 1;
+      margin-top: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), linear-gradient(90deg, #00a6f4, #00a6f4);
+      box-shadow: 0 1.5px 5px rgba(2,6,24,0.1), 0 0 0 1.5px #00a6f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .illustration-icon::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 -0.8px 1px rgba(255,255,255,0.3);
+    }
+
+    .empty-state-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: center;
+      margin-top: 24px;
+      width: 100%;
+    }
+
+    .empty-state-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d293d;
+      line-height: 28px;
+      font-family: 'Inter Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    }
+
+    .empty-state-desc {
+      font-size: 16px;
+      font-weight: 400;
+      color: #45556c;
+      line-height: 24px;
+    }
+
+    /* ─── FAQ Accordion ────────────────────────────── */
+    .accordion {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px rgba(2,74,112,0.05), 0 1px 1px -0.5px rgba(2,74,112,0.05), 0 2px 2px -1px rgba(0,132,209,0.05), 0 10px 10px -5px rgba(2,74,112,0.05);
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      background: white;
+      padding: 16px 16px 0;
+      height: 43px;
+      display: flex;
+      align-items: center;
+    }
+
+    .accordion-header-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1d293d;
+      line-height: 1.5;
+    }
+
+    .accordion-item {
+      background: white;
+      border-bottom: 1px solid #e0e8ee;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      align-items: center;
+    }
+
+    .accordion-item-inner {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 16px;
+      width: 100%;
+    }
+
+    .accordion-item-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: #45556c;
+      line-height: 20px;
+    }
+
+    /* ─── Bottom Nav ───────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 375px;
+      background: white;
+      border-top: 1px solid #e0e8ee;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 -1px 8px rgba(33,44,49,0.1);
+      z-index: 100;
+    }
+
+    .split-btn {
+      display: flex;
+      flex: 1;
+      height: 38px;
+    }
+
+    .split-btn-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%), #052f4a;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.2), 0 0 0 1px #052f4a;
+      font-size: 14px;
+      font-weight: 500;
+      color: white;
+      cursor: pointer;
+      padding: 8px 13px;
+      white-space: nowrap;
+    }
+
+    .split-btn-arrow {
+      width: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%), #052f4a;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.2), 0 0 0 1px #052f4a;
+      cursor: pointer;
+      color: white;
+    }
+
+    /* ─── Split button wrapper & dropdown ─────────── */
+    .split-btn-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .transfer-dropdown {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(2,6,24,0.12), 0 0 0 1px rgba(2,74,112,0.08);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .transfer-dropdown.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .transfer-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px 16px;
+      background: none;
+      border: none;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d293d;
+      text-align: left;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .transfer-option:last-child { border-bottom: none; }
+    .transfer-option:hover { background: #f6faff; }
+    .transfer-option:active { background: #e0f0fb; }
+
+    .transfer-option svg {
+      flex-shrink: 0;
+      color: #00a6f4;
+    }
+
+    .transfer-option-hint {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      color: #64748b;
+      margin-top: 1px;
+      position: absolute;
+      bottom: 14px;
+      right: 16px;
+    }
+
+    .transfer-option {
+      padding: 12px 16px 28px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-frame">
+
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-logo">
+      <img src="Logo111.svg" alt="NameSilo" style="height:20px;" />
+    </div>
+    <div class="nav-actions">
+      <div class="nav-icons">
+        <!-- Bell -->
+        <button class="nav-icon-btn" aria-label="Notifications">
+          <svg width="22" height="22" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+        <!-- Cart -->
+        <button class="nav-icon-btn" aria-label="Cart">
+          <svg width="22" height="22" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+        </button>
+        <!-- User -->
+        <button class="nav-icon-btn" aria-label="Account">
+          <svg width="22" height="22" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Hamburger -->
+      <button class="nav-hamburger" aria-label="Menu">
+        <svg width="14" height="14" fill="none" viewBox="0 0 14 14" stroke="#1d293d" stroke-width="1.6">
+          <line x1="1" y1="3" x2="13" y2="3"/>
+          <line x1="1" y1="7" x2="13" y2="7"/>
+          <line x1="1" y1="11" x2="13" y2="11"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <h1>Domain Manager</h1>
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16" style="color:#94a3b8;flex-shrink:0;">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-3.25a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0V5.5A.75.75 0 0 1 8 4.75Zm.75 6.5a.75.75 0 0 0-1.5 0v.5a.75.75 0 0 0 1.5 0v-.5Z" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tablist" role="tablist">
+      <button class="tab" role="tab">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+        My Domains
+      </button>
+      <button class="tab active" role="tab" aria-selected="true">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M21 9H3M16 15l5 5-5 5M8 20H3M21 4H3"/>
+          <path d="M3 15h5M8 9 3 4l5-5"/>
+        </svg>
+        Transfer
+      </button>
+      <button class="tab" role="tab">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Domain History
+      </button>
+    </div>
+
+    <!-- Transfer List section -->
+    <div>
+      <div class="section-header">
+        <div class="section-title-row">
+          <span class="section-title">Transfer List</span>
+          <span class="badge">0</span>
+        </div>
+        <!-- Toggle -->
+        <div class="selectbutton" role="group">
+          <button class="toggle-btn">
+            <span class="toggle-inner">Transfer In</span>
+          </button>
+          <button class="toggle-btn active">
+            <span class="toggle-inner">Transfer Out</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State Card -->
+      <div class="card" style="padding:8px;">
+        <div class="empty-state">
+          <!-- Illustration -->
+          <div class="empty-state-illustration">
+            <div class="illustration-circle"></div>
+            <div class="illustration-fade"></div>
+            <div class="illustration-icon">
+              <!-- Folder/profile icon -->
+              <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.6">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <div class="empty-state-text">
+            <p class="empty-state-title">No active domain transfers</p>
+            <p class="empty-state-desc">Transfers to this account and transfers away to another registrar will appear here. Once a transfer starts, you'll be able to monitor its status and complete any required steps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="accordion">
+      <div class="accordion-header">
+        <span class="accordion-header-title">FAQ</span>
+      </div>
+      <button class="accordion-item">
+        <div class="accordion-item-inner">
+          <span class="accordion-item-text">How long does a domain transfer take?</span>
+          <svg width="14" height="14" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <button class="accordion-item">
+        <div class="accordion-item-inner">
+          <span class="accordion-item-text">Where will I receive the transfer approval email?</span>
+          <svg width="14" height="14" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <button class="accordion-item">
+        <div class="accordion-item-inner">
+          <span class="accordion-item-text">What is an authorization (EPP) code and where do I get it?</span>
+          <svg width="14" height="14" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <button class="accordion-item" style="border-bottom:none;">
+        <div class="accordion-item-inner">
+          <span class="accordion-item-text">Can I cancel a transfer after it has started?</span>
+          <svg width="14" height="14" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="split-btn-wrapper">
+      <!-- Dropdown menu (appears above button) -->
+      <div class="transfer-dropdown" id="transferDropdown">
+        <button class="transfer-option" onclick="selectTransfer('in')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+          Transfer In
+          <span class="transfer-option-hint">Move domain to NameSilo</span>
+        </button>
+        <button class="transfer-option" onclick="selectTransfer('out')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+          Transfer Out
+          <span class="transfer-option-hint">Move domain away from NameSilo</span>
+        </button>
+      </div>
+
+      <div class="split-btn">
+        <button class="split-btn-main" onclick="toggleDropdown()">Transfer a Domain</button>
+        <button class="split-btn-arrow" aria-label="More options" onclick="toggleDropdown()" id="arrowBtn">
+          <svg width="14" height="14" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24" id="arrowIcon">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleDropdown() {
+    const dropdown = document.getElementById('transferDropdown');
+    const icon = document.getElementById('arrowIcon');
+    const isOpen = dropdown.classList.toggle('open');
+    icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    icon.style.transition = 'transform 0.2s ease';
+  }
+
+  function selectTransfer(type) {
+    const label = type === 'in' ? 'Transfer In' : 'Transfer Out';
+    document.querySelector('.split-btn-main').textContent = label;
+    // Switch the toggle above to match selection
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    toggleBtns.forEach(btn => btn.classList.remove('active'));
+    toggleBtns[type === 'in' ? 0 : 1].classList.add('active');
+    // Close dropdown
+    document.getElementById('transferDropdown').classList.remove('open');
+    document.getElementById('arrowIcon').style.transform = 'rotate(0deg)';
+  }
+
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.split-btn-wrapper');
+    if (!wrapper.contains(e.target)) {
+      document.getElementById('transferDropdown').classList.remove('open');
+      document.getElementById('arrowIcon').style.transform = 'rotate(0deg)';
+    }
+  });
+</script>
+
+</body>
+</html>
