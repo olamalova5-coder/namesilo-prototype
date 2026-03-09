@@ -1309,20 +1309,8 @@
         <span style="font-size:12px; color:#94a3b8; font-weight:500; border:1px solid #e0e8ee; border-radius:20px; padding:4px 14px; background:#fff;">OR</span>
       </div>
 
-      <!-- Premium Hosting Plan card (default state) -->
-      <div id="hostingGetCard" style="background:#e0e8ee; border-radius:12px; padding:16px; display:flex; align-items:center; gap:16px;">
-        <div style="width:56px; height:56px; border-radius:10px; background:hsl(215,20%,72%); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <svg width="28" height="28" fill="none" stroke="white" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="font-size:14px; font-weight:600; color:#1d293d; margin-bottom:4px;">Premium Hosting Plan</div>
-          <div style="font-size:13px; color:#64748b; line-height:1.5;">Free email, website builder, and easy WordPress installation are included with all of our hosting plans.</div>
-        </div>
-        <button class="btn-primary" style="flex-shrink:0;" onclick="document.getElementById('hostingGetCard').style.display='none'; document.getElementById('hostingPlanCard').style.display='flex';">Get Hosting</button>
-      </div>
-
-      <!-- Starter Hosting Plan card (shown after clicking Get Hosting) -->
-      <div id="hostingPlanCard" style="display:none; background:#fff; border-radius:12px; padding:16px; flex-direction:column; gap:16px;">
+      <!-- Starter Hosting Plan card (connected) -->
+      <div id="hostingPlanCard" style="display:flex; background:#fff; border-radius:12px; padding:16px; flex-direction:column; gap:16px;">
         <!-- Top row -->
         <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
           <div style="flex:1; min-width:0;">
