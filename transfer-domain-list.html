@@ -380,6 +380,36 @@
       font-size: 14px; font-weight: 500; color: #2563eb; line-height: 20px;
     }
 
+    /* ─── IPS Tag Error state ──────────────────────── */
+    .ips-error-banner {
+      display: none; align-items: flex-start; gap: 12px;
+      padding: 14px; border-radius: 12px;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      animation: shakeError 0.35s ease;
+    }
+    .ips-error-banner.visible { display: flex; }
+    @keyframes shakeError {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-6px); }
+      40%      { transform: translateX(6px); }
+      60%      { transform: translateX(-4px); }
+      80%      { transform: translateX(4px); }
+    }
+    .ips-error-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #fee2e2; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .ips-error-text { display: flex; flex-direction: column; gap: 2px; }
+    .ips-error-title { font-size: 14px; font-weight: 600; color: #dc2626; line-height: 20px; }
+    .ips-error-desc  { font-size: 13px; font-weight: 400; color: #ef4444; line-height: 18px; }
+
+    .btn-sheet-primary.error-state {
+      background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%), #dc2626;
+      box-shadow: 0 1px 2px rgba(220,38,38,0.3), 0 0 0 1px #dc2626;
+    }
+
     /* Action buttons */
     .card-actions { display: flex; gap: 8px; padding: 10px 16px 12px; }
 
@@ -814,10 +844,27 @@
       </div>
     </div>
     <p class="confirm-sheet-desc">Once confirmed, the transfer will complete automatically and the domain will no longer be managed in your NameSilo account.</p>
-    <div class="confirm-warning">This action cannot be undone.</div>
+    <div class="confirm-warning" id="confirmWarning">This action cannot be undone.</div>
+
+    <!-- Error state (hidden by default) -->
+    <div class="ips-error-banner" id="ipsErrorBanner">
+      <div class="ips-error-icon">
+        <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="ips-error-text">
+        <span class="ips-error-title">IPS tag not found</span>
+        <span class="ips-error-desc">The IPS tag you entered could not be found. Please check the tag and try again.</span>
+      </div>
+    </div>
+
     <div class="sheet-actions">
-      <button class="btn-sheet-primary" onclick="approveTransfer()">Approve Transfer</button>
-      <button class="btn-sheet-secondary" onclick="closeConfirmSheet()">Cancel</button>
+      <button class="btn-sheet-primary" id="approveBtn" onclick="approveTransfer()">Approve Transfer</button>
+      <button class="btn-sheet-secondary" id="editIpsBtn" onclick="retryIpsTag()" style="display:none;">Edit IPS Tag</button>
+      <button class="btn-sheet-secondary" id="cancelConfirmBtn" onclick="closeConfirmSheet()">Cancel</button>
     </div>
   </div>
 </div>
@@ -891,10 +938,37 @@
   function closeConfirmSheet() {
     document.getElementById('confirmBackdrop').classList.remove('open');
     document.getElementById('confirmBottomSheet').classList.remove('open');
+    // Reset error state for next open
+    setTimeout(resetConfirmSheet, 300);
+  }
+
+  function resetConfirmSheet() {
+    document.getElementById('ipsErrorBanner').classList.remove('visible');
+    document.getElementById('confirmWarning').style.display = '';
+    document.getElementById('approveBtn').textContent = 'Approve Transfer';
+    document.getElementById('approveBtn').classList.remove('error-state');
+    document.getElementById('approveBtn').style.display = '';
+    document.getElementById('editIpsBtn').style.display = 'none';
+    document.getElementById('cancelConfirmBtn').textContent = 'Cancel';
   }
 
   function approveTransfer() {
     const val = document.getElementById('confirmIpsValue').textContent;
+
+    // Simulate invalid tag check — tags that are clearly wrong show error
+    const knownTags = ['NAMECHEAP','GODADDY','TUCOWS','ENOM','NETSOL','UNIREGISTRY','CLOUDFLARE','DONUTS'];
+    const isValid = knownTags.includes(val.toUpperCase());
+
+    if (!isValid) {
+      // Show error state
+      document.getElementById('ipsErrorBanner').classList.add('visible');
+      document.getElementById('confirmWarning').style.display = 'none';
+      document.getElementById('approveBtn').style.display = 'none';
+      document.getElementById('editIpsBtn').style.display = '';
+      document.getElementById('cancelConfirmBtn').textContent = 'Close';
+      return;
+    }
+
     closeConfirmSheet();
 
     // Update card: show saved IPS tag
@@ -915,6 +989,18 @@
       statusBadge.className = 'status-badge';
       statusBadge.style.cssText = 'background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd;';
     }
+  }
+
+  function retryIpsTag() {
+    closeConfirmSheet();
+    setTimeout(() => {
+      document.getElementById('ipsSheetInput').value = '';
+      document.getElementById('ipsSheetInput').classList.remove('error');
+      document.getElementById('ipsErrorMsg').classList.remove('visible');
+      document.getElementById('sheetBackdrop').classList.add('open');
+      document.getElementById('ipsBottomSheet').classList.add('open');
+      setTimeout(() => document.getElementById('ipsSheetInput').focus(), 320);
+    }, 320);
   }
 
   /* ── Info popup (bottom sheet) ── */
