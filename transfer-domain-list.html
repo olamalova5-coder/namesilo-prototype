@@ -408,7 +408,7 @@
     }
     .btn-cancel-only:hover { background: #f8fafc; }
 
-    /* ─── Tooltip ──────────────────────────────────── */
+    /* ─── Info trigger ─────────────────────────────── */
     .info-trigger {
       display: inline-flex; align-items: center; justify-content: center;
       width: 18px; height: 18px; border-radius: 50%;
@@ -417,55 +417,7 @@
       transition: color 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .info-trigger:hover, .info-trigger.active { color: #00a6f4; }
-
-    /* Floating card */
-    .tooltip-card {
-      position: fixed; z-index: 201;
-      width: 289px;
-      display: flex; flex-direction: column; align-items: center;
-      opacity: 0; transform: translateY(6px) scale(0.97);
-      pointer-events: none;
-      transition: opacity 0.18s ease, transform 0.18s ease;
-    }
-    .tooltip-card.open {
-      opacity: 1; transform: translateY(0) scale(1);
-      pointer-events: all;
-    }
-
-    .tooltip-body {
-      background: rgba(29, 41, 61, 0.92);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-radius: 12px;
-      padding: 12px;
-      display: flex; flex-direction: column; gap: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
-      width: 100%;
-    }
-
-    .tooltip-text {
-      font-size: 14px; font-weight: 400; line-height: 20px;
-      color: white;
-    }
-
-    .tooltip-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      height: 32px; padding: 0 12px;
-      background: white; border: none; border-radius: 8px;
-      font-size: 14px; font-weight: 500; color: #45556c;
-      cursor: pointer; white-space: nowrap; align-self: flex-start;
-    }
-    .tooltip-btn:hover { background: #f8fafc; }
-
-    /* Arrow pointing down toward the trigger */
-    .tooltip-arrow {
-      width: 0; height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 7px solid rgba(29, 41, 61, 0.92);
-      flex-shrink: 0;
-    }
+    .info-trigger:hover { color: #00a6f4; }
 
     /* ─── Pagination ───────────────────────────────── */
     .pagination {
@@ -870,15 +822,35 @@
   </div>
 </div>
 
-<!-- Floating tooltip card -->
-<div class="tooltip-card" id="tooltipCard">
-  <div class="tooltip-body">
-    <p class="tooltip-text">Some TLDs (like .uk) follow a different transfer process. Check the instructions to complete the transfer correctly.</p>
-    <div>
-      <button class="tooltip-btn" onclick="closeTooltip()">How to Transfer</button>
+<!-- Info Bottom Sheet -->
+<div class="sheet-backdrop" id="infoBackdrop" onclick="closeTooltip()"></div>
+<div class="bottom-sheet" id="infoBottomSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="confirm-sheet-icon" style="background:#fef3c7;">
+      <svg width="18" height="18" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <button class="sheet-close" onclick="closeTooltip()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <p class="confirm-sheet-title">Different Transfer Process</p>
+      <p class="confirm-sheet-desc">Some TLDs (like .uk) follow a different transfer process. Instead of the standard auth code, you need to provide an IPS tag to complete the transfer to your new registrar.</p>
+    </div>
+    <div class="confirm-warning" style="background:rgba(254,243,199,0.8);box-shadow:0 1px 2px rgba(2,6,24,0.06),0 0 0 1px #fde68a;color:#92400e;">
+      Check your new registrar's documentation to find the correct IPS tag.
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-sheet-primary" onclick="closeTooltip()">How to Transfer</button>
+      <button class="btn-sheet-secondary" onclick="closeTooltip()">Close</button>
     </div>
   </div>
-  <div class="tooltip-arrow"></div>
 </div>
 
 <script>
@@ -945,56 +917,17 @@
     }
   }
 
-  /* ── Tooltip — lightweight, no overlay ── */
-  let tooltipTimer = null;
-
+  /* ── Info popup (bottom sheet) ── */
   function openTooltip(e) {
     e.stopPropagation();
-    const trigger = document.getElementById('tooltipTrigger');
-    const card = document.getElementById('tooltipCard');
-
-    // Toggle: tap again to close
-    if (card.classList.contains('open')) { closeTooltip(); return; }
-
-    // Position: centred above the trigger, arrow points down
-    const cardWidth = 289;
-    const gap = 10;
-    const rect = trigger.getBoundingClientRect();
-    const frameLeft = document.querySelector('.mobile-frame').getBoundingClientRect().left;
-    let left = rect.left + rect.width / 2 - cardWidth / 2;
-    left = Math.max(frameLeft + 8, Math.min(left, frameLeft + 375 - cardWidth - 8));
-
-    card.style.left = left + 'px';
-    card.style.top = '-9999px'; // offscreen first to measure
-    card.classList.add('open');
-    trigger.classList.add('active');
-
-    requestAnimationFrame(() => {
-      const h = card.offsetHeight;
-      card.style.top = (rect.top - h - gap) + 'px';
-    });
-
-    // Auto-dismiss after 5s
-    clearTimeout(tooltipTimer);
-    tooltipTimer = setTimeout(closeTooltip, 5000);
+    document.getElementById('infoBackdrop').classList.add('open');
+    document.getElementById('infoBottomSheet').classList.add('open');
   }
 
   function closeTooltip() {
-    clearTimeout(tooltipTimer);
-    document.getElementById('tooltipCard').classList.remove('open');
-    const trigger = document.getElementById('tooltipTrigger');
-    if (trigger) trigger.classList.remove('active');
+    document.getElementById('infoBackdrop').classList.remove('open');
+    document.getElementById('infoBottomSheet').classList.remove('open');
   }
-
-  // Tap anywhere outside tooltip → close
-  document.addEventListener('click', function(e) {
-    const card = document.getElementById('tooltipCard');
-    const trigger = document.getElementById('tooltipTrigger');
-    if (card && card.classList.contains('open') &&
-        !card.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
-      closeTooltip();
-    }
-  });
 
   function toggleDropdown() {
     const d = document.getElementById('transferDropdown');
