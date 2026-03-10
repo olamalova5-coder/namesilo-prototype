@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain Manager | Transfer</title>
+  <style>
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      animation: pageFadeIn 0.25s ease;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1d293d;
+      background: #e2eaf2;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* ─── Mobile Frame ─────────────────────────────── */
+    .mobile-frame {
+      width: 375px;
+      min-height: 100vh;
+      background: #f6faff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ─── Top Navigation ───────────────────────────── */
+    .top-nav {
+      background: #f6faff;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 0 0 8px 8px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo img { height: 20px; width: auto; }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,132,209,0.05);
+      border: 1px solid rgba(2,74,112,0.05);
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .nav-icons { display: flex; gap: 4px; align-items: center; }
+
+    .nav-icon-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; background: none; border: none; cursor: pointer; color: #45556c;
+    }
+
+    .nav-hamburger {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      background: white; border: 1px solid #f1f5f9; border-radius: 10px; cursor: pointer;
+      box-shadow: 0 1px 1px rgba(2,74,112,0.05), 0 2px 2px rgba(0,132,209,0.05);
+    }
+
+    /* ─── Main Content ─────────────────────────────── */
+    .content {
+      flex: 1;
+      padding: 24px 16px 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    /* ─── Page Title ───────────────────────────────── */
+    .page-title {
+      display: flex; align-items: center; gap: 10px; height: 32px;
+    }
+    .page-title h1 {
+      font-size: 24px; font-weight: 500; color: #1d293d; line-height: 32px;
+    }
+
+    /* ─── Tabs ─────────────────────────────────────── */
+    .tablist {
+      display: flex; align-items: flex-end;
+      border-bottom: 1px solid #e0e8ee;
+    }
+    .tab {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; height: 46px;
+      background: transparent; border: none; cursor: pointer;
+      font-size: 14px; font-weight: 500; color: #45556c; white-space: nowrap;
+    }
+    .tab.active {
+      font-weight: 600; color: #052f4a;
+      border-bottom: 2px solid #00a6f4; margin-bottom: -1px;
+    }
+
+    /* ─── Search Bar ───────────────────────────────── */
+    .search-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .search-input-wrap {
+      flex: 1; position: relative; display: flex; align-items: center;
+    }
+    .search-input-wrap svg {
+      position: absolute; left: 12px; color: #94a3b8; flex-shrink: 0;
+    }
+    .search-input {
+      width: 100%; height: 40px;
+      padding: 0 12px 0 36px;
+      border: 1px solid #e0e8ee;
+      border-radius: 10px;
+      background: white;
+      font-size: 14px; color: #94a3b8;
+      outline: none;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.04);
+    }
+    .search-input::placeholder { color: #94a3b8; }
+    .filter-btn {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #e0e8ee; border-radius: 10px;
+      background: white; cursor: pointer; color: #45556c; flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.04);
+    }
+
+    /* ─── Section Header ───────────────────────────── */
+    .section-header {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .section-title-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title { font-size: 16px; font-weight: 500; color: #1d293d; line-height: 24px; }
+    .badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 21px; min-width: 21px; border-radius: 10.5px;
+      font-size: 10px; font-weight: 700; color: #45556c;
+      background: linear-gradient(180deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.05) 100%), #f8fafc;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.05), 0 0 0 1px #e0e8ee;
+      padding: 0 5px;
+    }
+
+    /* ─── Toggle ───────────────────────────────────── */
+    .selectbutton { display: flex; border-radius: 8px; overflow: hidden; }
+    .toggle-btn {
+      display: flex; align-items: center; justify-content: center; padding: 3px;
+      background: #f0f9ff; border: 1px solid #e2eff9; cursor: pointer;
+      font-size: 14px; font-weight: 500; color: #64748b;
+    }
+    .toggle-btn:first-child { border-right: none; border-radius: 8px 0 0 8px; }
+    .toggle-btn:last-child  { border-left: none;  border-radius: 0 8px 8px 0; }
+    .toggle-btn .inner { padding: 4px 12px; border-radius: 6px; line-height: 20px; }
+    .toggle-btn.active .inner {
+      background: white; color: #0f172a;
+      box-shadow: 0 1px 1px rgba(2,74,112,0.05), 0 2px 2px rgba(0,132,209,0.05), 0 5px 5px rgba(2,74,112,0.05);
+    }
+
+    /* ─── Domain Cards ─────────────────────────────── */
+    .domain-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .domain-card {
+      background: white; border-radius: 12px; padding: 0;
+      box-shadow: 0 0 0 1px rgba(2,74,112,0.05), 0 1px 1px -0.5px rgba(2,74,112,0.05), 0 2px 2px -1px rgba(0,132,209,0.05), 0 10px 10px -5px rgba(2,74,112,0.05);
+      overflow: hidden;
+    }
+
+    .card-top {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .card-checkbox {
+      width: 16px; height: 16px; border-radius: 4px;
+      border: 1.5px solid #cbd5e1; background: white;
+      cursor: pointer; flex-shrink: 0; appearance: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-checkbox:checked {
+      background: #00a6f4; border-color: #00a6f4;
+    }
+
+    .domain-name {
+      font-size: 14px; font-weight: 500; color: #1d293d; flex: 1;
+    }
+
+    .card-body { padding: 10px 16px 0; }
+
+    .card-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px;
+    }
+    .card-row:last-of-type { border-bottom: none; }
+    .card-label { color: #64748b; font-weight: 400; }
+    .card-value { color: #1d293d; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 500; white-space: nowrap;
+    }
+    .status-pending  { background: #fff7ed; color: #c2530a; border: 1px solid #fed7aa; }
+    .status-ips      { background: #fff7ed; color: #c2530a; border: 1px solid #fed7aa; }
+    .status-complete { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .status-denied   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+    /* Fast badge */
+    .fast-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 12px; font-weight: 500; color: #f59e0b;
+    }
+
+    /* Progress bar */
+    .progress-wrap { padding: 10px 0 8px; }
+    .progress-bar {
+      height: 4px; background: #e0e8ee; border-radius: 4px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; border-radius: 4px; background: #00a6f4; }
+
+    /* IPS Tag add link */
+    .ips-tag-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 13px; font-weight: 500; color: #0ea5e9;
+      background: none; border: none; cursor: pointer; padding: 0;
+    }
+
+    /* Action buttons */
+    .card-actions { display: flex; gap: 8px; padding: 10px 16px 12px; }
+
+    .btn-approve {
+      flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid #e0e8ee; border-radius: 10px; background: white;
+      font-size: 13px; font-weight: 500; color: #1d293d; cursor: pointer;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.04);
+    }
+    .btn-approve:hover { background: #f8fafc; }
+
+    .btn-cancel {
+      flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid #e0e8ee; border-radius: 10px; background: white;
+      font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.04);
+    }
+    .btn-cancel:hover { background: #f8fafc; }
+
+    .btn-cancel-only {
+      width: 100%; height: 36px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid #e0e8ee; border-radius: 10px; background: white;
+      font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer;
+      margin: 10px 16px 12px; width: calc(100% - 32px);
+      box-shadow: 0 1px 2px rgba(2,6,24,0.04);
+    }
+    .btn-cancel-only:hover { background: #f8fafc; }
+
+    /* ─── Pagination ───────────────────────────────── */
+    .pagination {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 4px 0;
+    }
+    .page-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #e0e8ee; border-radius: 8px; background: white;
+      cursor: pointer; color: #45556c;
+    }
+    .page-btn:hover { background: #f6faff; }
+    .page-info { font-size: 14px; color: #45556c; display: flex; align-items: center; gap: 6px; }
+    .page-num {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #e0e8ee; border-radius: 8px; background: white;
+      font-weight: 600; font-size: 14px; color: #1d293d;
+    }
+    .page-total { font-size: 14px; color: #45556c; }
+
+    /* ─── Bottom Nav ───────────────────────────────── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 375px; background: white;
+      border-top: 1px solid #e0e8ee; padding: 16px;
+      display: flex; align-items: center;
+      box-shadow: 0 -1px 8px rgba(33,44,49,0.1); z-index: 100;
+    }
+
+    .split-btn-wrapper { position: relative; flex: 1; display: flex; flex-direction: column; }
+
+    .transfer-dropdown {
+      position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+      background: white; border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(2,6,24,0.12), 0 0 0 1px rgba(2,74,112,0.08);
+      overflow: hidden; opacity: 0; transform: translateY(8px);
+      pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .transfer-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+    .transfer-option {
+      display: flex; align-items: flex-start; gap: 12px;
+      width: 100%; padding: 14px 16px;
+      background: none; border: none; border-bottom: 1px solid #f1f5f9;
+      cursor: pointer; text-align: left; transition: background 0.15s;
+    }
+    .transfer-option:last-child { border-bottom: none; }
+    .transfer-option:hover { background: #f6faff; }
+    .transfer-option svg { flex-shrink: 0; margin-top: 2px; color: #00a6f4; }
+    .transfer-option-label { font-size: 15px; font-weight: 500; color: #1d293d; display: block; }
+    .transfer-option-hint  { font-size: 12px; font-weight: 400; color: #64748b; display: block; margin-top: 2px; }
+
+    .split-btn { display: flex; flex: 1; height: 42px; }
+    .split-btn-main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.05) 100%), #052f4a;
+      border: 1px solid rgba(255,255,255,0.2); border-right: none;
+      border-radius: 10px 0 0 10px;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.2), 0 0 0 1px #052f4a;
+      font-size: 14px; font-weight: 500; color: white; cursor: pointer;
+    }
+    .split-btn-arrow {
+      width: 38px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.05) 100%), #052f4a;
+      border: 1px solid rgba(255,255,255,0.2); border-left: none;
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.2), 0 0 0 1px #052f4a;
+      cursor: pointer; color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-frame">
+
+  <!-- Top Nav -->
+  <nav class="top-nav">
+    <div class="nav-logo">
+      <img src="Logo111.svg" alt="NameSilo" />
+    </div>
+    <div class="nav-actions">
+      <div class="nav-icons">
+        <button class="nav-icon-btn">
+          <svg width="22" height="22" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <button class="nav-icon-btn">
+          <svg width="22" height="22" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </button>
+        <button class="nav-icon-btn">
+          <svg width="22" height="22" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+      </div>
+      <button class="nav-hamburger">
+        <svg width="14" height="14" fill="none" viewBox="0 0 14 14" stroke="#1d293d" stroke-width="1.6"><line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="1" y1="11" x2="13" y2="11"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="content">
+
+    <!-- Title -->
+    <div class="page-title">
+      <h1>Domain Manager</h1>
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16" style="color:#94a3b8">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-3.25a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0V5.5A.75.75 0 0 1 8 4.75Zm.75 6.5a.75.75 0 0 0-1.5 0v.5a.75.75 0 0 0 1.5 0v-.5Z" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tablist">
+      <button class="tab">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        My Domains
+      </button>
+      <button class="tab active">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Transfer
+      </button>
+      <button class="tab">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Domain History
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" placeholder="Search by domain name..." />
+      </div>
+      <button class="filter-btn">
+        <svg width="16" height="16" fill="none" stroke="#45556c" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      </button>
+    </div>
+
+    <!-- Transfer List -->
+    <div class="section-header">
+      <div class="section-title-row">
+        <span class="section-title">Transfer List</span>
+        <span class="badge">8</span>
+      </div>
+      <div class="selectbutton">
+        <button class="toggle-btn"><span class="inner">Transfer In</span></button>
+        <button class="toggle-btn active"><span class="inner">Transfer Out</span></button>
+      </div>
+    </div>
+
+    <!-- Domain Cards -->
+    <div class="domain-list">
+
+      <!-- Card 1: Pending Approval -->
+      <div class="domain-card">
+        <div class="card-top">
+          <input type="checkbox" class="card-checkbox" />
+          <span class="domain-name">tranquilmeadows.com</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row">
+            <span class="card-label">From</span>
+            <span class="card-value">Spaceship</span>
+          </div>
+          <div class="card-row">
+            <span class="card-label">Status</span>
+            <span class="card-value"><span class="status-badge status-pending">Pending Approval</span></span>
+          </div>
+          <div class="card-row">
+            <span class="card-label">Initiated</span>
+            <span class="card-value">25 Jan, 2026</span>
+          </div>
+          <div class="card-row" style="border-bottom:none;">
+            <span class="card-label">Autocomplete</span>
+            <span class="card-value">5 days</span>
+          </div>
+          <!-- Progress bar -->
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:68%;"></div></div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-approve">
+            <svg width="13" height="13" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve Transfer
+          </button>
+          <button class="btn-cancel">
+            <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Cancel Transfer
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2: IPS Tag Required -->
+      <div class="domain-card">
+        <div class="card-top">
+          <input type="checkbox" class="card-checkbox" />
+          <span class="domain-name">domainhub.co.uk</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row">
+            <span class="card-label">From</span>
+            <span class="card-value">Spaceship</span>
+          </div>
+          <div class="card-row">
+            <span class="card-label">Status</span>
+            <span class="card-value"><span class="status-badge status-ips">IPS Tag Required</span></span>
+          </div>
+          <div class="card-row">
+            <span class="card-label">Initiated</span>
+            <span class="card-value">24 Jan, 2026</span>
+          </div>
+          <div class="card-row" style="border-bottom:none;">
+            <span class="card-label">IPS Tag</span>
+            <span class="card-value">
+              <button class="ips-tag-btn">
+                <svg width="13" height="13" fill="none" stroke="#0ea5e9" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                IPS Tag
+              </button>
+            </span>
+          </div>
+        </div>
+        <div style="padding: 4px 16px 12px;">
+          <button class="btn-cancel-only" style="margin:0;width:100%;">
+            <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Cancel Transfer
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3: Completed -->
+      <div class="domain-card">
+        <div class="card-top">
+          <input type="checkbox" class="card-checkbox" />
+          <span class="domain-name">peacefuloasis.com</span>
+        </div>
+        <div class="card-body" style="padding-bottom:12px;">
+          <div class="card-row">
+            <span class="card-label">From</span>
+            <span class="card-value">
+              Spaceship
+              <span class="fast-badge">
+                <svg width="11" height="11" fill="#f59e0b" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Fast
+              </span>
+            </span>
+          </div>
+          <div class="card-row">
+            <span class="card-label">Status</span>
+            <span class="card-value"><span class="status-badge status-complete">Completed</span></span>
+          </div>
+          <div class="card-row" style="border-bottom:none;">
+            <span class="card-label">Initiated</span>
+            <span class="card-value">24 Jan, 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Denied -->
+      <div class="domain-card">
+        <div class="card-top">
+          <input type="checkbox" class="card-checkbox" />
+          <span class="domain-name">calmretreats.com</span>
+        </div>
+        <div class="card-body" style="padding-bottom:12px;">
+          <div class="card-row">
+            <span class="card-label">From</span>
+            <span class="card-value">
+              (Other registrar)
+              <span class="fast-badge">
+                <svg width="11" height="11" fill="#f59e0b" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Fast
+              </span>
+            </span>
+          </div>
+          <div class="card-row">
+            <span class="card-label">Status</span>
+            <span class="card-value"><span class="status-badge status-denied">Denied</span></span>
+          </div>
+          <div class="card-row" style="border-bottom:none;">
+            <span class="card-label">Initiated</span>
+            <span class="card-value">24 Jan, 2026</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="page-btn">
+        <svg width="14" height="14" fill="none" stroke="#45556c" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="page-info">
+        Page <span class="page-num">1</span> <span class="page-total">of 25</span>
+      </div>
+      <button class="page-btn">
+        <svg width="14" height="14" fill="none" stroke="#45556c" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="split-btn-wrapper">
+      <div class="transfer-dropdown" id="transferDropdown">
+        <button class="transfer-option" onclick="selectTransfer('in')">
+          <svg width="16" height="16" fill="none" stroke="#00a6f4" stroke-width="1.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          <span>
+            <span class="transfer-option-label">Transfer In</span>
+            <span class="transfer-option-hint">Move domain to NameSilo</span>
+          </span>
+        </button>
+        <button class="transfer-option" onclick="selectTransfer('out')">
+          <svg width="16" height="16" fill="none" stroke="#00a6f4" stroke-width="1.8" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          <span>
+            <span class="transfer-option-label">Transfer Out</span>
+            <span class="transfer-option-hint">Move domain away from NameSilo</span>
+          </span>
+        </button>
+      </div>
+      <div class="split-btn">
+        <button class="split-btn-main" onclick="toggleDropdown()">Transfer a Domain</button>
+        <button class="split-btn-arrow" onclick="toggleDropdown()" id="arrowBtn">
+          <svg width="14" height="14" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24" id="arrowIcon"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleDropdown() {
+    const d = document.getElementById('transferDropdown');
+    const icon = document.getElementById('arrowIcon');
+    const open = d.classList.toggle('open');
+    icon.style.transform = open ? 'rotate(180deg)' : 'rotate(0)';
+    icon.style.transition = 'transform 0.2s ease';
+  }
+  function selectTransfer(type) {
+    document.querySelector('.split-btn-main').textContent = type === 'in' ? 'Transfer In' : 'Transfer Out';
+    document.getElementById('transferDropdown').classList.remove('open');
+    document.getElementById('arrowIcon').style.transform = 'rotate(0)';
+  }
+  document.addEventListener('click', function(e) {
+    const w = document.querySelector('.split-btn-wrapper');
+    if (!w.contains(e.target)) {
+      document.getElementById('transferDropdown').classList.remove('open');
+      document.getElementById('arrowIcon').style.transform = 'rotate(0)';
+    }
+  });
+</script>
+
+</body>
+</html>
