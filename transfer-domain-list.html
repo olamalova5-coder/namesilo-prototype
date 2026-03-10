@@ -519,6 +519,77 @@
       box-shadow: 0 1px 2px rgba(2,6,24,0.2), 0 0 0 1px #052f4a;
       cursor: pointer; color: white;
     }
+
+    /* ─── Transfer Log icon ────────────────────────── */
+    .log-btn {
+      margin-left: auto; flex-shrink: 0;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; background: none; border: none; cursor: pointer;
+      color: #94a3b8; transition: color 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .log-btn:hover, .log-btn:active { color: #00a6f4; background: #e0f2fe; }
+
+    /* ─── Transfer Log bottom sheet ────────────────── */
+    .log-sheet-domain {
+      font-size: 13px; font-weight: 500; color: #64748b;
+      padding: 2px 0 4px;
+    }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .timeline-item {
+      display: flex; gap: 14px; position: relative;
+    }
+
+    .timeline-left {
+      display: flex; flex-direction: column; align-items: center;
+      width: 28px; flex-shrink: 0;
+    }
+
+    .timeline-dot {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .timeline-dot.success  { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
+    .timeline-dot.pending  { background: #fff7ed; border: 1.5px solid #fed7aa; }
+    .timeline-dot.error    { background: #fef2f2; border: 1.5px solid #fecaca; }
+    .timeline-dot.info     { background: #f0f9ff; border: 1.5px solid #bae6fd; }
+    .timeline-dot.neutral  { background: #f8fafc; border: 1.5px solid #e0e8ee; }
+
+    .timeline-line {
+      width: 1.5px; flex: 1; min-height: 16px;
+      background: #e0e8ee; margin: 2px 0;
+    }
+    .timeline-item:last-child .timeline-line { display: none; }
+
+    .timeline-content {
+      padding: 2px 0 20px; flex: 1; min-width: 0;
+    }
+    .timeline-item:last-child .timeline-content { padding-bottom: 4px; }
+
+    .timeline-title {
+      font-size: 14px; font-weight: 600; color: #1d293d; line-height: 20px;
+    }
+    .timeline-desc {
+      font-size: 13px; font-weight: 400; color: #64748b; line-height: 18px;
+      margin-top: 2px;
+    }
+    .timeline-date {
+      font-size: 12px; font-weight: 400; color: #94a3b8; margin-top: 4px;
+    }
+    .timeline-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 6px; padding: 3px 8px; border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+    }
+    .timeline-badge.current-pending { background:#fff7ed; color:#c2530a; border:1px solid #fed7aa; }
+    .timeline-badge.current-ips     { background:#fff7ed; color:#c2530a; border:1px solid #fed7aa; }
+    .timeline-badge.current-done    { background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; }
+    .timeline-badge.current-denied  { background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
   </style>
 </head>
 <body>
@@ -606,6 +677,9 @@
         <div class="card-top">
           <input type="checkbox" class="card-checkbox" />
           <span class="domain-name">tranquilmeadows.com</span>
+          <button class="log-btn" onclick="openTransferLog('tranquilmeadows')" aria-label="Open Transfer Log">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </button>
         </div>
         <div class="card-body">
           <div class="card-row">
@@ -646,6 +720,9 @@
         <div class="card-top">
           <input type="checkbox" class="card-checkbox" />
           <span class="domain-name">domainhub.co.uk</span>
+          <button class="log-btn" onclick="openTransferLog('domainhub')" aria-label="Open Transfer Log">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </button>
           <button class="info-trigger" id="tooltipTrigger" onclick="openTooltip(event)" aria-label="Transfer process info">
             <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-3.25a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0V5.5A.75.75 0 0 1 8 4.75Zm.75 6.5a.75.75 0 0 0-1.5 0v.5a.75.75 0 0 0 1.5 0v-.5Z" fill="currentColor"/>
@@ -689,6 +766,9 @@
         <div class="card-top">
           <input type="checkbox" class="card-checkbox" />
           <span class="domain-name">peacefuloasis.com</span>
+          <button class="log-btn" onclick="openTransferLog('peacefuloasis')" aria-label="Open Transfer Log">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </button>
         </div>
         <div class="card-body" style="padding-bottom:12px;">
           <div class="card-row">
@@ -717,6 +797,9 @@
         <div class="card-top">
           <input type="checkbox" class="card-checkbox" />
           <span class="domain-name">calmretreats.com</span>
+          <button class="log-btn" onclick="openTransferLog('calmretreats')" aria-label="Open Transfer Log">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </button>
         </div>
         <div class="card-body" style="padding-bottom:12px;">
           <div class="card-row">
@@ -869,6 +952,24 @@
   </div>
 </div>
 
+<!-- Transfer Log Bottom Sheet -->
+<div class="sheet-backdrop" id="logBackdrop" onclick="closeTransferLog()"></div>
+<div class="bottom-sheet" id="logBottomSheet" style="max-height:85vh;display:flex;flex-direction:column;">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <span class="sheet-title">Transfer Log</span>
+      <span id="logDomainLabel" style="font-size:12px;color:#64748b;font-weight:400;"></span>
+    </div>
+    <button class="sheet-close" onclick="closeTransferLog()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" style="overflow-y:auto;flex:1;">
+    <div class="timeline" id="logTimeline"></div>
+  </div>
+</div>
+
 <!-- Info Bottom Sheet -->
 <div class="sheet-backdrop" id="infoBackdrop" onclick="closeTooltip()"></div>
 <div class="bottom-sheet" id="infoBottomSheet">
@@ -1001,6 +1102,82 @@
       document.getElementById('ipsBottomSheet').classList.add('open');
       setTimeout(() => document.getElementById('ipsSheetInput').focus(), 320);
     }, 320);
+  }
+
+  /* ── Transfer Log Bottom Sheet ── */
+  const SVG = {
+    arrow:  `<svg width="12" height="12" fill="none" stroke="#0369a1" stroke-width="2.2" viewBox="0 0 24 24"><line x1="5" y1="19" x2="19" y2="5"/><polyline points="9 5 19 5 19 15"/></svg>`,
+    mail:   `<svg width="12" height="12" fill="none" stroke="#0369a1" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2 4 12 13 22 4"/></svg>`,
+    clock:  `<svg width="12" height="12" fill="none" stroke="#c2530a" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    tag:    `<svg width="12" height="12" fill="none" stroke="#c2530a" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`,
+    check:  `<svg width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`,
+    bolt:   `<svg width="12" height="12" fill="#0369a1" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    search: `<svg width="12" height="12" fill="none" stroke="#0369a1" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+    x:      `<svg width="12" height="12" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+  };
+  const transferLogs = {
+    tranquilmeadows: {
+      domain: 'tranquilmeadows.com',
+      events: [
+        { type: 'info',    icon: SVG.arrow,  title: 'Transfer Initiated',       desc: 'Transfer request sent to Spaceship',       date: '25 Jan 2026, 09:14' },
+        { type: 'info',    icon: SVG.mail,   title: 'Confirmation Email Sent',  desc: 'Verification email sent to admin contact', date: '25 Jan 2026, 09:15' },
+        { type: 'pending', icon: SVG.clock,  title: 'Awaiting Owner Approval',  desc: 'Waiting for approval from domain owner',   date: '25 Jan 2026, 09:16', badge: { label: 'Current step', cls: 'current-pending' } },
+      ]
+    },
+    domainhub: {
+      domain: 'domainhub.co.uk',
+      events: [
+        { type: 'info',    icon: SVG.arrow,  title: 'Transfer Initiated',       desc: 'Transfer request submitted',                date: '24 Jan 2026, 14:02' },
+        { type: 'pending', icon: SVG.tag,    title: 'IPS Tag Required',         desc: 'Provide the IPS tag of your new registrar', date: '24 Jan 2026, 14:03', badge: { label: 'Action required', cls: 'current-ips' } },
+      ]
+    },
+    peacefuloasis: {
+      domain: 'peacefuloasis.com',
+      events: [
+        { type: 'info',    icon: SVG.arrow,  title: 'Transfer Initiated',       desc: 'Transfer request sent to Spaceship',          date: '24 Jan 2026, 10:00' },
+        { type: 'info',    icon: SVG.mail,   title: 'Confirmation Email Sent',  desc: 'Verification email sent to admin contact',    date: '24 Jan 2026, 10:01' },
+        { type: 'success', icon: SVG.check,  title: 'Owner Approved',           desc: 'Domain owner approved the transfer',          date: '24 Jan 2026, 11:30' },
+        { type: 'info',    icon: SVG.bolt,   title: 'Fast Transfer Processing', desc: 'Accelerated transfer in progress',            date: '24 Jan 2026, 11:31' },
+        { type: 'success', icon: SVG.check,  title: 'Transfer Completed',       desc: 'Domain successfully transferred to NameSilo', date: '24 Jan 2026, 12:45', badge: { label: 'Completed', cls: 'current-done' } },
+      ]
+    },
+    calmretreats: {
+      domain: 'calmretreats.com',
+      events: [
+        { type: 'info',    icon: SVG.arrow,  title: 'Transfer Initiated',       desc: 'Transfer request sent to current registrar',    date: '24 Jan 2026, 08:00' },
+        { type: 'info',    icon: SVG.mail,   title: 'Confirmation Email Sent',  desc: 'Verification email sent to admin contact',      date: '24 Jan 2026, 08:01' },
+        { type: 'info',    icon: SVG.search, title: 'Under Review',             desc: 'Registrar is reviewing the transfer request',   date: '24 Jan 2026, 09:00' },
+        { type: 'error',   icon: SVG.x,      title: 'Transfer Denied',          desc: 'Current registrar denied the transfer request', date: '24 Jan 2026, 14:22', badge: { label: 'Denied', cls: 'current-denied' } },
+      ]
+    }
+  };
+
+  function openTransferLog(key) {
+    const log = transferLogs[key];
+    if (!log) return;
+    document.getElementById('logDomainLabel').textContent = log.domain;
+
+    const timeline = document.getElementById('logTimeline');
+    timeline.innerHTML = log.events.map(ev => `
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot ${ev.type}">${ev.icon}</div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-title">${ev.title}</div>${ev.badge ? `<span class="timeline-badge ${ev.badge.cls}">${ev.badge.label}</span>` : ''}
+          <div class="timeline-desc">${ev.desc}</div>
+          <div class="timeline-date">${ev.date}</div>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('logBackdrop').classList.add('open');
+    document.getElementById('logBottomSheet').classList.add('open');
+  }
+
+  function closeTransferLog() {
+    document.getElementById('logBackdrop').classList.remove('open');
+    document.getElementById('logBottomSheet').classList.remove('open');
   }
 
   /* ── Info popup (bottom sheet) ── */
