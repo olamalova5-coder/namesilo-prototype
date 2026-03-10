@@ -233,47 +233,6 @@
       background: none; border: none; cursor: pointer; padding: 0;
     }
 
-    /* ─── IPS Tag inline edit ──────────────────────── */
-    .ips-edit-row {
-      display: none; align-items: center; gap: 8px;
-      padding: 10px 16px 12px;
-      border-top: 1px solid #f1f5f9;
-      background: #f8faff;
-      border-radius: 0 0 12px 12px;
-      animation: slideDown 0.18s ease;
-    }
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .ips-edit-row.visible { display: flex; }
-
-    .ips-input-wrap { flex: 1; position: relative; }
-    .ips-input {
-      width: 100%; height: 36px;
-      padding: 0 10px;
-      border: 1.5px solid #00a6f4;
-      border-radius: 8px;
-      background: white;
-      font-size: 14px; font-weight: 500; color: #1d293d;
-      outline: none; letter-spacing: 0.5px;
-      box-shadow: 0 0 0 3px rgba(0,166,244,0.1);
-      text-transform: uppercase;
-    }
-    .ips-input::placeholder { color: #94a3b8; font-weight: 400; text-transform: none; }
-
-    .ips-action-btn {
-      width: 36px; height: 36px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 8px; border: 1px solid #e0e8ee;
-      background: white; cursor: pointer;
-      box-shadow: 0 1px 2px rgba(2,6,24,0.05);
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .ips-action-btn.confirm { border-color: #bbf7d0; }
-    .ips-action-btn.confirm:hover { background: #f0fdf4; }
-    .ips-action-btn.discard:hover { background: #fef2f2; border-color: #fecaca; }
-
     /* Saved tag display */
     .ips-saved {
       display: inline-flex; align-items: center; gap: 6px;
@@ -283,6 +242,103 @@
     .ips-saved-dot {
       width: 6px; height: 6px; border-radius: 50%; background: #16a34a; flex-shrink: 0;
     }
+
+    /* ─── IPS Tag Bottom Sheet ─────────────────────── */
+    .sheet-backdrop {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(15, 23, 42, 0.45);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .sheet-backdrop.open { opacity: 1; pointer-events: all; }
+
+    .bottom-sheet {
+      position: fixed; bottom: 0; left: 50%; z-index: 301;
+      transform: translateX(-50%) translateY(100%);
+      width: 375px;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      padding: 0 0 env(safe-area-inset-bottom, 0);
+      box-shadow: 0 -4px 32px rgba(2,6,24,0.12);
+      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
+    }
+    .bottom-sheet.open { transform: translateX(-50%) translateY(0); }
+
+    .sheet-handle {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: #e0e8ee; margin: 12px auto 0;
+    }
+
+    .sheet-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 20px 0;
+    }
+    .sheet-title {
+      font-size: 18px; font-weight: 600; color: #1d293d; line-height: 1.3;
+    }
+    .sheet-close {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: #f1f5f9; border: none; cursor: pointer;
+      color: #64748b;
+    }
+    .sheet-close:hover { background: #e2e8f0; }
+
+    .sheet-body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 20px; }
+
+    .sheet-hint {
+      font-size: 14px; color: #64748b; line-height: 20px;
+    }
+    .sheet-hint strong { color: #1d293d; font-weight: 600; }
+
+    .sheet-field { display: flex; flex-direction: column; gap: 6px; }
+    .sheet-label { font-size: 13px; font-weight: 500; color: #45556c; }
+    .sheet-input {
+      width: 100%; height: 48px;
+      padding: 0 14px;
+      border: 1.5px solid #e0e8ee; border-radius: 12px;
+      background: #f8fafc;
+      font-size: 16px; font-weight: 600; color: #1d293d;
+      letter-spacing: 1px; text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    .sheet-input:focus {
+      border-color: #00a6f4; background: white;
+      box-shadow: 0 0 0 3px rgba(0,166,244,0.12);
+    }
+    .sheet-input.error {
+      border-color: #f87171;
+      box-shadow: 0 0 0 3px rgba(248,113,113,0.12);
+    }
+    .sheet-input::placeholder { color: #94a3b8; font-weight: 400; letter-spacing: 0; text-transform: none; }
+    .sheet-error-msg {
+      font-size: 12px; color: #ef4444; display: none; margin-top: 2px;
+    }
+    .sheet-error-msg.visible { display: block; }
+
+    .sheet-actions { display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-sheet-primary {
+      width: 100%; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%), #052f4a;
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
+      box-shadow: 0 1px 2px rgba(2,6,24,0.2), 0 0 0 1px #052f4a;
+      font-size: 15px; font-weight: 600; color: white;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn-sheet-primary:hover { opacity: 0.92; }
+
+    .btn-sheet-secondary {
+      width: 100%; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: white; border: 1px solid #e0e8ee; border-radius: 12px;
+      font-size: 15px; font-weight: 500; color: #45556c;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-sheet-secondary:hover { background: #f8fafc; }
 
     /* Action buttons */
     .card-actions { display: flex; gap: 8px; padding: 10px 16px 12px; }
@@ -605,19 +661,6 @@
           </div>
         </div>
 
-        <!-- IPS Tag inline edit (hidden by default) -->
-        <div class="ips-edit-row" id="ipsEditRow">
-          <div class="ips-input-wrap">
-            <input class="ips-input" id="ipsInput" type="text" placeholder="e.g. NAMECHEAP" maxlength="24" autocomplete="off" autocapitalize="characters" />
-          </div>
-          <button class="ips-action-btn confirm" onclick="confirmIpsTag()" title="Save">
-            <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          </button>
-          <button class="ips-action-btn discard" onclick="discardIpsTag()" title="Cancel">
-            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-
         <div style="padding: 4px 16px 12px;" id="ipsCancelWrap">
           <button class="btn-cancel-only" style="margin:0;width:100%;">
             <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -729,6 +772,30 @@
 
 </div>
 
+<!-- IPS Tag Bottom Sheet -->
+<div class="sheet-backdrop" id="sheetBackdrop" onclick="closeIpsSheet()"></div>
+<div class="bottom-sheet" id="ipsBottomSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <span class="sheet-title">Add IPS Tag</span>
+    <button class="sheet-close" onclick="closeIpsSheet()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <p class="sheet-hint">Enter the <strong>IPS tag</strong> of your new registrar. You can find it in your new registrar's transfer documentation.</p>
+    <div class="sheet-field">
+      <label class="sheet-label" for="ipsSheetInput">IPS Tag</label>
+      <input class="sheet-input" id="ipsSheetInput" type="text" placeholder="e.g. NAMECHEAP" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+      <span class="sheet-error-msg" id="ipsErrorMsg">Please enter a valid IPS tag</span>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-sheet-primary" onclick="confirmIpsTag()">Save IPS Tag</button>
+      <button class="btn-sheet-secondary" onclick="closeIpsSheet()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tooltip overlay (tap outside to close) -->
 <div class="tooltip-overlay" id="tooltipOverlay" onclick="closeTooltip()"></div>
 
@@ -744,53 +811,51 @@
 </div>
 
 <script>
-  /* ── IPS Tag inline edit ── */
+  /* ── IPS Tag Bottom Sheet ── */
   function openIpsEdit() {
-    document.getElementById('ipsEditRow').classList.add('visible');
-    document.getElementById('ipsAddBtn').style.display = 'none';
-    // Hide the bottom cancel button while editing to keep focus clean
-    document.getElementById('ipsCancelWrap').style.display = 'none';
-    const input = document.getElementById('ipsInput');
+    const input = document.getElementById('ipsSheetInput');
     input.value = '';
-    setTimeout(() => input.focus(), 50);
+    input.classList.remove('error');
+    document.getElementById('ipsErrorMsg').classList.remove('visible');
+    document.getElementById('sheetBackdrop').classList.add('open');
+    document.getElementById('ipsBottomSheet').classList.add('open');
+    setTimeout(() => input.focus(), 320); // after sheet animation
   }
 
-  function discardIpsTag() {
-    document.getElementById('ipsEditRow').classList.remove('visible');
-    document.getElementById('ipsAddBtn').style.display = '';
-    document.getElementById('ipsCancelWrap').style.display = '';
+  function closeIpsSheet() {
+    document.getElementById('sheetBackdrop').classList.remove('open');
+    document.getElementById('ipsBottomSheet').classList.remove('open');
   }
 
   function confirmIpsTag() {
-    const val = document.getElementById('ipsInput').value.trim().toUpperCase();
+    const input = document.getElementById('ipsSheetInput');
+    const val = input.value.trim().toUpperCase();
     if (!val) {
-      document.getElementById('ipsInput').style.borderColor = '#f87171';
-      document.getElementById('ipsInput').style.boxShadow = '0 0 0 3px rgba(248,113,113,0.15)';
-      document.getElementById('ipsInput').focus();
+      input.classList.add('error');
+      document.getElementById('ipsErrorMsg').classList.add('visible');
+      input.focus();
       return;
     }
-    // Save: hide edit row, show saved value
-    document.getElementById('ipsEditRow').classList.remove('visible');
-    document.getElementById('ipsCancelWrap').style.display = '';
 
+    closeIpsSheet();
+
+    // Show saved tag value in the card
     const tagValue = document.getElementById('ipsTagValue');
     tagValue.innerHTML = `
       <span class="ips-saved">
         <span class="ips-saved-dot"></span>
         ${val}
       </span>
-      <button class="ips-tag-btn" onclick="openIpsEdit()" style="margin-left:6px;font-size:12px;" title="Edit">
+      <button class="ips-tag-btn" onclick="openIpsEdit()" style="margin-left:6px;" title="Edit">
         <svg width="12" height="12" fill="none" stroke="#0ea5e9" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>`;
 
-    // Update status badge to reflect tag entered
+    // Update status badge
     const statusBadge = document.querySelector('#ipsTagRow').closest('.domain-card').querySelector('.status-badge');
     if (statusBadge) {
       statusBadge.textContent = 'Processing';
       statusBadge.className = 'status-badge';
-      statusBadge.style.background = '#f0f9ff';
-      statusBadge.style.color = '#0369a1';
-      statusBadge.style.border = '1px solid #bae6fd';
+      statusBadge.style.cssText = 'background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd;';
     }
   }
 
