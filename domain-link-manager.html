@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain Link Manager | NameSilo</title>
+  <style>
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: pageFadeIn 0.25s ease; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1d293d;
+      background: #f2f6fa;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ──────────────────────────────────────────── */
+    .sidebar {
+      width: 208px;
+      min-width: 208px;
+      background: #f2f6fa;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 18px 16px 14px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: #052f4a;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f1c2e;
+      letter-spacing: -0.3px;
+    }
+    .logo-text span { color: #00a6f4; }
+
+    .sidebar-collapse-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .sidebar-collapse-btn:hover { background: #e2e8f0; }
+
+    .get-domain-btn {
+      margin: 0 12px 12px;
+      background: #00a6f4;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: calc(100% - 24px);
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.2);
+      transition: background 0.15s;
+    }
+    .get-domain-btn:hover { background: #0090d4; }
+
+    .nav-section { padding: 4px 0; display: flex; flex-direction: column; gap: 2px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      color: #45556c;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 6px;
+      margin: 0 6px;
+      text-decoration: none;
+      transition: background 0.12s, color 0.12s;
+    }
+    .nav-item:hover { background: #dde8f0; color: #0f172a; }
+    .nav-item.active { color: #0f172a; background: #dde8f0; }
+    .nav-item svg { flex-shrink: 0; color: #64748b; }
+    .nav-item.active svg { color: #00a6f4; }
+    .nav-chevron { margin-left: auto; color: #94a3b8; font-size: 10px; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .need-help-wrap {
+      background: rgba(0,132,209,0.06);
+      border-radius: 12px;
+      padding: 4px;
+    }
+    .need-help-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0px 1px 1px -0.5px rgba(2,74,112,0.05), 0px 3px 3px -1.5px rgba(2,74,112,0.05), 0px 6px 6px -3px rgba(2,74,112,0.05);
+    }
+    .need-help-text { display: flex; flex-direction: column; gap: 2px; }
+    .need-help-title { font-size: 14px; font-weight: 500; color: #1d293d; line-height: 20px; }
+    .need-help-sub   { font-size: 13px; font-weight: 400; color: #45556c; line-height: 18px; }
+    .go-to-website {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      color: #45556c;
+      cursor: pointer;
+      text-decoration: none;
+      padding: 2px 0;
+    }
+    .go-to-website:hover { color: #1d293d; }
+    .go-website-icon {
+      width: 28px;
+      height: 28px;
+      border: 1px solid #e0e8ee;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #64748b;
+      background: #fff;
+    }
+
+    /* ─── Main ─────────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ─── Top Header ───────────────────────────────────────── */
+    .top-header {
+      background: #f2f6fa;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .info-btn:hover { color: #64748b; }
+
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .bell-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bell-btn:hover { color: #1d293d; }
+
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .cart-btn:hover { color: #1d293d; }
+
+    .user-avatar {
+      width: 34px;
+      height: 34px;
+      background: #64748b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ─── Page Body ────────────────────────────────────────── */
+    .page-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    /* ─── Search + Filter Row ──────────────────────────────── */
+    .search-filter-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+
+    .search-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+      padding: 0 12px;
+      height: 42px;
+      gap: 8px;
+    }
+    .search-wrapper:focus-within { border-color: #00a6f4; box-shadow: 0 0 0 3px rgba(0,166,244,0.12); }
+
+    .search-icon { color: #94a3b8; flex-shrink: 0; }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 13.5px;
+      color: #1d293d;
+      background: transparent;
+      font-family: inherit;
+    }
+    .search-input::placeholder { color: #94a3b8; }
+
+    .regex-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      border-left: 1px solid #e2e8f0;
+      padding-left: 12px;
+      margin-left: 4px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch {
+      width: 36px;
+      height: 20px;
+      background: #cbd5e1;
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-switch.on { background: #00a6f4; }
+    .toggle-switch.on::after { transform: translateX(16px); }
+
+    .filters-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 14px;
+      height: 42px;
+      border: 1px solid #e0e8ee;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #45556c;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .filters-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    .add-domain-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      height: 42px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #052f4a;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 0 0 1px #052f4a, 0 1px 2px rgba(2,6,24,0.2);
+      transition: background 0.12s;
+      flex-shrink: 0;
+    }
+    .add-domain-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #073d61; }
+
+    /* ─── Table Card ───────────────────────────────────────── */
+    .table-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e0e8ee;
+    }
+
+    .table-card-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e0e8ee;
+      gap: 12px;
+    }
+
+    .table-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .count-badge {
+      background: #052f4a;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .table-header-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .export-csv-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      height: 36px;
+      border: 1px solid #e0e8ee;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      color: #45556c;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .export-csv-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid #e0e8ee;
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #64748b;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .icon-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    /* ─── Table ────────────────────────────────────────────── */
+    .table-scroll-wrapper { overflow-x: auto; }
+
+    .domains-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .domains-table th {
+      background: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d293d;
+      text-align: left;
+      padding: 13px 16px 12px;
+      border-bottom: 1px solid #e0e8ee;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .domains-table th:first-child { padding-left: 16px; width: 44px; }
+
+    .domains-table td {
+      padding: 15px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+      color: #45556c;
+      font-size: 13.5px;
+    }
+    .domains-table td:first-child { padding-left: 16px; }
+    .domains-table tr:last-child td { border-bottom: none; }
+    .domains-table tr:hover td { background: #f8fafc; }
+
+    .checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #fff;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .checkbox:checked { background: #00a6f4; border-color: #00a6f4; }
+    .checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1.5px;
+      width: 5px;
+      height: 8px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .domain-name {
+      font-weight: 500;
+      color: #00a6f4;
+      cursor: pointer;
+      transition: color 0.12s;
+      text-decoration: none;
+    }
+    .domain-name:hover { text-decoration: underline; color: #0084d1; }
+
+    .ns-cell { display: flex; flex-direction: column; gap: 1px; }
+    .ns-line { font-size: 13px; color: #45556c; white-space: nowrap; }
+
+    .dash-text { color: #94a3b8; font-size: 15px; }
+    .not-available-text { font-size: 13px; color: #45556c; }
+    .date-text { font-size: 13px; color: #45556c; white-space: nowrap; }
+    .registrar-text { font-size: 13.5px; color: #45556c; }
+
+    /* ─── Pagination ───────────────────────────────────────── */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-top: 1px solid #e0e8ee;
+      background: #fff;
+      font-size: 13px;
+      color: #64748b;
+      gap: 8px;
+    }
+
+    .viewing-text { color: #64748b; font-size: 13px; }
+    .viewing-divider { color: #cbd5e1; margin: 0 4px; }
+
+    .rows-per-page {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .rows-select {
+      border: 1px solid #e0e8ee;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 13px;
+      color: #45556c;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      font-family: inherit;
+    }
+    .rows-select:focus { border-color: #00a6f4; }
+
+    .pagination-pages {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .page-btn {
+      min-width: 30px;
+      height: 30px;
+      border: 1px solid #e0e8ee;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 13px;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0 6px;
+      transition: background 0.12s, border-color 0.12s;
+      font-family: inherit;
+    }
+    .page-btn.active { background: #052f4a; border-color: #052f4a; color: #fff; font-weight: 600; }
+    .page-btn:hover:not(.active) { background: #f8fafc; border-color: #94a3b8; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="8" height="8" rx="1.5" fill="white" opacity="0.9"/>
+        <rect x="13" y="3" width="8" height="8" rx="1.5" fill="white" opacity="0.6"/>
+        <rect x="3" y="13" width="8" height="8" rx="1.5" fill="white" opacity="0.6"/>
+        <rect x="13" y="13" width="8" height="8" rx="1.5" fill="white" opacity="0.3"/>
+      </svg>
+    </div>
+    <span class="logo-text">Name<span>Silo</span></span>
+    <button class="sidebar-collapse-btn" title="Collapse sidebar">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 3 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <button class="get-domain-btn">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    Get New Domain
+  </button>
+
+  <nav class="nav-section">
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item active" href="domain-manager.html">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Domains
+      <span class="nav-chevron">&#x276F;</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      Services &amp; Add-Ons
+      <span class="nav-chevron">&#x276F;</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Reseller &amp; API
+      <span class="nav-chevron">&#x276F;</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Investor Hub
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Website Builder
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="need-help-wrap">
+      <div class="need-help-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2C9 2 9.8 5.6 11 7C12.2 8.4 16 9 16 9C16 9 12.2 9.6 11 11C9.8 12.4 9 16 9 16C9 16 8.2 12.4 7 11C5.8 9.6 2 9 2 9C2 9 5.8 8.4 7 7C8.2 5.6 9 2 9 2Z" fill="#0084d1"/>
+          <path d="M19 2C19 2 19.5 4 20.2 4.8C20.9 5.6 23 6 23 6C23 6 20.9 6.4 20.2 7.2C19.5 8 19 10 19 10C19 10 18.5 8 17.8 7.2C17.1 6.4 15 6 15 6C15 6 17.1 5.6 17.8 4.8C18.5 4 19 2 19 2Z" fill="#0084d1" opacity="0.7"/>
+          <path d="M19 15C19 15 19.4 16.6 19.9 17.1C20.4 17.6 22 18 22 18C22 18 20.4 18.4 19.9 18.9C19.4 19.4 19 21 19 21C19 21 18.6 19.4 18.1 18.9C17.6 18.4 16 18 16 18C16 18 17.6 17.6 18.1 17.1C18.6 16.6 19 15 19 15Z" fill="#0084d1" opacity="0.5"/>
+        </svg>
+        <div class="need-help-text">
+          <span class="need-help-title">Need Help?</span>
+          <span class="need-help-sub">Live Support Chat or Ask AI</span>
+        </div>
+      </div>
+    </div>
+    <a class="go-to-website" href="#">
+      <div class="go-website-icon">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      Go to Website
+    </a>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ════════════════════════ -->
+<div class="main">
+
+  <!-- Top Header -->
+  <header class="top-header">
+    <div class="page-title">
+      Domain Link Manager
+      <button class="info-btn" title="About Domain Link Manager">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button class="bell-btn" title="Notifications">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="header-stat">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        0,00
+      </div>
+      <div class="header-stat">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        0.00
+      </div>
+      <button class="cart-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Cart
+      </button>
+      <div class="user-avatar">JD</div>
+    </div>
+  </header>
+
+  <!-- Page Body -->
+  <div class="page-body">
+
+    <!-- Search + Filter + Add Domain -->
+    <div class="search-filter-row">
+      <div class="search-wrapper">
+        <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" placeholder="Search up to 500 domain names — single or multiple, separated by comma or space..." />
+        <div class="regex-toggle">
+          <div class="toggle-switch" id="regexToggle" onclick="this.classList.toggle('on')"></div>
+          <span>Regex</span>
+        </div>
+      </div>
+      <button class="filters-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Filters
+      </button>
+      <button class="add-domain-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Add Domain
+      </button>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <div class="table-title">
+          My Domains
+          <span class="count-badge">3</span>
+        </div>
+        <div class="table-header-actions">
+          <button class="export-csv-btn">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="icon-btn" title="Table settings">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-1.41-1.41L16 5.17A7.93 7.93 0 0 0 12 4a8 8 0 0 0-4 1.17L6.34 3.52A10 10 0 0 0 4.93 4.93L6.58 6.58A7.93 7.93 0 0 0 4 12a8 8 0 0 0 1.17 4l-1.65 1.66a10 10 0 0 0 1.41 1.41L6.58 17.42A7.93 7.93 0 0 0 12 20a8 8 0 0 0 4-1.17l1.66 1.65a10 10 0 0 0 1.41-1.41L17.42 17.42A7.93 7.93 0 0 0 20 12a8 8 0 0 0-1.17-4l1.65-1.66z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-scroll-wrapper">
+        <table class="domains-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="checkbox" /></th>
+              <th>Domain Name</th>
+              <th>Register</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Expiration</th>
+              <th>Updated</th>
+              <th>NameServers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="checkbox" /></td>
+              <td><a class="domain-name" href="domain-management.html?domain=creativemindstudio.com">creativemindstudio.com</a></td>
+              <td class="registrar-text">NameSilo</td>
+              <td><span class="dash-text">–</span></td>
+              <td class="date-text">12 Feb, 2024</td>
+              <td class="date-text">12 Feb, 2025</td>
+              <td class="not-available-text">not available</td>
+              <td>
+                <div class="ns-cell">
+                  <span class="ns-line">ns1.dnsowl.com,</span>
+                  <span class="ns-line">ns2.dnsowl.com</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="checkbox" /></td>
+              <td><a class="domain-name" href="domain-management.html?domain=long-domain-goes.here">long-domain-goes.here</a></td>
+              <td class="registrar-text">NameSilo</td>
+              <td><span class="dash-text">–</span></td>
+              <td class="date-text">15 Feb, 2024</td>
+              <td class="date-text">15 Feb, 2025</td>
+              <td class="not-available-text">not available</td>
+              <td>
+                <div class="ns-cell">
+                  <span class="ns-line">ns1.dnsowl.com,</span>
+                  <span class="ns-line">ns2.dnsowl.com</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-bar">
+        <span class="viewing-text">Viewing</span>
+        <span class="viewing-text">1 – 10</span>
+        <span class="viewing-divider">|</span>
+        <div class="rows-per-page">
+          Rows per page:
+          <select class="rows-select">
+            <option>All</option>
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+          </select>
+        </div>
+        <div class="pagination-pages">
+          <button class="page-btn" disabled>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 3 12 9 6"/></svg>
+          </button>
+          <button class="page-btn" disabled>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn" disabled>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="page-btn" disabled>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/><polyline points="15 18 21 12 15 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-body -->
+</div><!-- /main -->
+
+<!-- Agentation visual feedback overlay (dev only) -->
+<div id="__agentation_root__" style="position:fixed;z-index:99999;bottom:0;right:0;"></div>
+<script type="module">
+  try {
+    const React = (await import("https://esm.sh/react@18")).default;
+    const { createRoot } = await import("https://esm.sh/react-dom@18/client");
+    const { Agentation } = await import("https://esm.sh/agentation@2.3.2");
+    const root = createRoot(document.getElementById("__agentation_root__"));
+    root.render(React.createElement(Agentation, { endpoint: "http://localhost:4747" }));
+    console.log("[Agentation] loaded OK");
+  } catch(e) {
+    console.error("[Agentation] error:", e);
+  }
+</script>
+
+</body>
+</html>

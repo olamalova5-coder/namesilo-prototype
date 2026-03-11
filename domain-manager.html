@@ -797,6 +797,609 @@
     .domains-table tbody tr.row-selected:hover td { background: #f1f5f9; }
     .domains-table tbody tr.row-selected:hover td.col-action { background: #f1f5f9; }
 
+    /* ─── Tab panels ──────────────────────────────────────────── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── External Domains Empty State ───────────────────────── */
+    .ext-empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 24px;
+      text-align: center;
+    }
+    .ext-empty-icon {
+      width: 64px;
+      height: 64px;
+      background: #f1f5f9;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .ext-empty-title { font-size: 18px; font-weight: 600; color: #1d293d; margin-bottom: 8px; }
+    .ext-empty-desc { font-size: 14px; color: #64748b; line-height: 1.6; max-width: 440px; margin-bottom: 28px; }
+    .ext-empty-desc strong { color: #45556c; font-weight: 500; }
+
+    .add-ext-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #00a6f4;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.2);
+      transition: background 0.15s;
+    }
+    .add-ext-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #0090d4; }
+
+    .ext-features {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ext-feature {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      max-width: 160px;
+      text-align: center;
+    }
+    .ext-feature-icon {
+      width: 36px;
+      height: 36px;
+      background: #e0f3ff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0084d1;
+    }
+    .ext-feature-label { font-size: 13px; font-weight: 500; color: #1d293d; line-height: 1.4; }
+    .ext-feature-sub { font-size: 12px; color: #64748b; line-height: 1.4; }
+
+    /* ─── Add External Domains Modal ─────────────────────────── */
+    .add-ext-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3,20,31,0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .add-ext-modal.open { display: flex; }
+    .add-ext-popup {
+      background: #fff;
+      border-radius: 20px;
+      width: 560px;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 48px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 1px rgba(2,74,112,0.05), 0 5px 12px 6px rgba(2,74,112,0.1), 0 20px 40px -10px rgba(2,74,112,0.15);
+    }
+    .add-ext-header {
+      padding: 20px 20px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .add-ext-header-left { display: flex; flex-direction: column; gap: 4px; }
+    .add-ext-step-label { font-size: 11px; font-weight: 600; color: #00a6f4; text-transform: uppercase; letter-spacing: 0.6px; }
+    .add-ext-title { font-size: 18px; font-weight: 600; color: #1d293d; }
+    .add-ext-subtitle { font-size: 14px; color: #64748b; margin-top: 2px; }
+    .add-ext-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-radius: 8px;
+      color: #64748b;
+      flex-shrink: 0;
+    }
+    .add-ext-close:hover { background: #f1f5f9; }
+    .add-ext-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+    .textarea-label { font-size: 13px; font-weight: 500; color: #1d293d; margin-bottom: 8px; display: block; }
+    .domain-textarea {
+      width: 100%;
+      height: 160px;
+      border: 1.5px solid #e0e8ee;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      color: #1d293d;
+      resize: vertical;
+      outline: none;
+      line-height: 1.6;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .domain-textarea::placeholder { color: #94a3b8; font-family: -apple-system, sans-serif; }
+    .domain-textarea:focus { border-color: #00a6f4; box-shadow: 0 0 0 3px rgba(0,166,244,0.12); }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: #e0e8ee; }
+
+    .upload-csv-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .upload-csv-btn:hover { border-color: #00a6f4; background: #f0f9ff; color: #0084d1; }
+    .input-hint { font-size: 12px; color: #94a3b8; margin-top: 8px; }
+
+    .preview-count { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+    .preview-count strong { color: #1d293d; font-weight: 600; }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #e0e8ee;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .preview-table th {
+      background: #f8fafc;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #64748b;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e8ee;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .preview-table td {
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13.5px;
+      color: #1d293d;
+      vertical-align: middle;
+    }
+    .preview-table tr:last-child td { border-bottom: none; }
+    .preview-table tr:hover td { background: #f8fafc; }
+
+    .from-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #166534;
+      background: #dcfce7;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .from-label { font-size: 10px; font-weight: 500; color: #15803d; text-transform: uppercase; letter-spacing: 0.4px; }
+
+    .registrar-badge {
+      font-size: 12px;
+      font-weight: 500;
+      color: #45556c;
+      background: #f1f5f9;
+      border: 1px solid #e0e8ee;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .preview-warning {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fef9ec;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #92400e;
+    }
+
+    .success-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 16px 0 8px;
+      gap: 12px;
+    }
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #dcfce7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #16a34a;
+    }
+    .success-title { font-size: 20px; font-weight: 600; color: #1d293d; }
+    .success-desc { font-size: 14px; color: #64748b; line-height: 1.6; max-width: 360px; }
+
+    .add-ext-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #e0e8ee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .step-dots { display: flex; gap: 6px; align-items: center; }
+    .step-dot { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; transition: all 0.2s; }
+    .step-dot.active { background: #00a6f4; width: 18px; border-radius: 3px; }
+    .step-dot.done { background: #00a6f4; opacity: 0.4; }
+
+    .ext-footer-actions { display: flex; gap: 8px; }
+    .btn-ghost {
+      border: 1px solid #e0e8ee;
+      background: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #45556c;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-ghost:hover { background: #f8fafc; }
+    .btn-primary {
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #00a6f4;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.15);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+    .btn-primary:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #0090d4; }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ─── External Domains Table ──────────────────────────────── */
+    .ext-table-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e0e8ee;
+      gap: 12px;
+    }
+    .ext-table-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+    .ext-domains-table { width: 100%; border-collapse: collapse; }
+    .ext-domains-table th {
+      background: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      text-align: left;
+      padding: 11px 16px;
+      border-bottom: 1px solid #e0e8ee;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .ext-domains-table th:first-child { width: 44px; padding-left: 16px; }
+    .ext-domains-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+      font-size: 13.5px;
+      color: #334155;
+    }
+    .ext-domains-table tr:last-child td { border-bottom: none; }
+    .ext-domains-table tr:hover td { background: #f8fafc; }
+
+    .ext-domain-name {
+      font-weight: 500;
+      color: #1d293d;
+      display: block;
+    }
+    .ext-domain-tld {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .registrar-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #45556c;
+      background: #f1f5f9;
+      border: 1px solid #e0e8ee;
+      padding: 4px 9px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .registrar-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .exp-date { font-size: 13px; color: #45556c; white-space: nowrap; }
+    .exp-date.soon { color: #b45309; font-weight: 500; }
+    .exp-date.expired { color: #dc2626; font-weight: 500; }
+
+    .ext-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .ext-status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ext-status-active    { background: #dcfce7; color: #166534; }
+    .ext-status-active::before { background: #16a34a; }
+    .ext-status-expiring  { background: #fef3c7; color: #92400e; }
+    .ext-status-expiring::before { background: #d97706; }
+    .ext-status-expired   { background: #fee2e2; color: #991b1b; }
+    .ext-status-expired::before  { background: #dc2626; }
+
+    .renewal-col {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .renewal-namesilo-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1d293d;
+    }
+    .renewal-namesilo-price small { font-size: 11px; font-weight: 400; color: #94a3b8; margin-left: 1px; }
+    .renewal-save-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #166534;
+      background: #dcfce7;
+      padding: 2px 6px;
+      border-radius: 5px;
+      width: fit-content;
+    }
+    .renewal-current-price {
+      font-size: 11.5px;
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+
+    .transfer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #00a6f4;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.15);
+      transition: background 0.12s;
+    }
+    .transfer-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #0090d4; }
+
+    .more-btn {
+      width: 30px;
+      height: 30px;
+      background: none;
+      border: 1px solid #e0e8ee;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #64748b;
+      font-size: 16px;
+      line-height: 1;
+      transition: background 0.12s;
+      position: relative;
+    }
+    .more-btn:hover { background: #f1f5f9; }
+    .more-btn.active { background: #f1f5f9; border-color: #94a3b8; }
+
+    .ext-row-actions { display: flex; align-items: center; gap: 6px; position: relative; }
+
+    .row-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: #fff;
+      border: 1px solid #e0e8ee;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 12px 28px -8px rgba(0,0,0,0.12);
+      z-index: 200;
+      min-width: 200px;
+      overflow: hidden;
+      padding: 4px;
+    }
+    .row-dropdown.open { display: block; }
+
+    .row-dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      font-size: 13.5px;
+      color: #1d293d;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.1s;
+    }
+    .row-dd-item:hover { background: #f1f5f9; }
+    .row-dd-item svg { flex-shrink: 0; color: #64748b; }
+    .row-dd-item.danger { color: #dc2626; }
+    .row-dd-item.danger svg { color: #dc2626; }
+    .row-dd-item.danger:hover { background: #fff1f2; }
+
+    .row-dd-divider { height: 1px; background: #f1f5f9; margin: 4px 0; }
+
+    /* ─── Action modals (Edit / Reminder / Remove) ───────────── */
+    .action-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3,20,31,0.45);
+      z-index: 1100;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-modal.open { display: flex; }
+    .action-popup {
+      background: #fff;
+      border-radius: 16px;
+      width: 440px;
+      max-width: calc(100vw - 32px);
+      box-shadow: 0 1px 1px rgba(2,74,112,0.05), 0 5px 12px 6px rgba(2,74,112,0.1), 0 20px 40px -10px rgba(2,74,112,0.15);
+      overflow: hidden;
+    }
+    .action-popup-header {
+      padding: 20px 20px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .action-popup-title { font-size: 17px; font-weight: 600; color: #1d293d; }
+    .action-popup-domain { font-size: 13px; color: #64748b; margin-top: 2px; }
+    .action-popup-body { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .action-popup-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #e0e8ee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 13px; font-weight: 500; color: #1d293d; }
+    .form-input {
+      height: 40px;
+      border: 1.5px solid #e0e8ee;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+      color: #1d293d;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus { border-color: #00a6f4; box-shadow: 0 0 0 3px rgba(0,166,244,0.12); }
+
+    .reminder-options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .reminder-chip {
+      padding: 7px 14px;
+      border: 1.5px solid #e0e8ee;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #45556c;
+      cursor: pointer;
+      background: #fff;
+      transition: all 0.12s;
+    }
+    .reminder-chip:hover { border-color: #00a6f4; color: #0084d1; background: #f0f9ff; }
+    .reminder-chip.selected { border-color: #00a6f4; background: #e0f3ff; color: #0084d1; font-weight: 600; }
+
+    /* Remove confirm */
+    .remove-warning {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .remove-warning-icon {
+      width: 36px;
+      height: 36px;
+      background: #fee2e2;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #dc2626;
+      flex-shrink: 0;
+    }
+    .remove-warning-text { font-size: 13.5px; color: #991b1b; line-height: 1.5; }
+    .remove-warning-text strong { color: #7f1d1d; }
+
+    .btn-danger {
+      background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%), #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px #dc2626, 0 1px 2px rgba(2,6,24,0.15);
+      font-family: inherit;
+    }
+    .btn-danger:hover { background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #b91c1c; }
+
     /* Custom checkbox */
     .checkbox {
       appearance: none;
@@ -1151,19 +1754,26 @@
 
     <!-- Tab Navigation -->
     <nav class="tab-nav">
-      <div class="tab active">
+      <div class="tab active" data-tab="my-domains">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         My Domains
       </div>
-      <div class="tab">
+      <div class="tab" data-tab="external-domains">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        External Domains
+      </div>
+      <div class="tab" data-tab="transfer">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
         Transfer
       </div>
-      <div class="tab">
+      <div class="tab" data-tab="history">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Domain History
       </div>
     </nav>
+
+    <!-- ── My Domains Tab Panel ── -->
+    <div class="tab-panel active" id="panel-my-domains">
 
     <!-- Search + Filter -->
     <div class="search-filter-row">
@@ -1415,8 +2025,150 @@
       </div>
     </div>
 
+    </div><!-- /panel-my-domains -->
+
+    <!-- ── External Domains Tab Panel ── -->
+    <div class="tab-panel" id="panel-external-domains">
+
+      <!-- Empty state (shown when no domains) -->
+      <div class="ext-empty-state" id="extEmptyState">
+        <div class="ext-empty-icon">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <h2 class="ext-empty-title">Link your external domains</h2>
+        <p class="ext-empty-desc">
+          Whether your domains are at <strong>GoDaddy, Namecheap</strong> or anywhere in between — link them here. We'll watch the expiry dates and make sure you always renew at the best price.
+        </p>
+        <button class="add-ext-btn" id="openAddExtModal">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add External Domains
+        </button>
+      </div>
+
+      <!-- Table view (shown when domains exist) -->
+      <div id="extTableView" style="display:none;">
+        <div class="table-card">
+          <div class="ext-table-header">
+            <div class="table-title">
+              External Domains
+              <span class="count-badge" id="extDomainCount">0</span>
+            </div>
+            <div class="ext-table-actions">
+              <button class="icon-btn" title="Export CSV">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+              <button class="add-ext-btn" id="openAddExtModal2" style="padding:0 14px; height:36px; font-size:13px; border-radius:8px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                Add Domains
+              </button>
+            </div>
+          </div>
+          <div class="table-scroll-wrapper">
+            <table class="ext-domains-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" class="checkbox" /></th>
+                  <th>Domain</th>
+                  <th>Current Registrar</th>
+                  <th>Expiration</th>
+                  <th>Status</th>
+                  <th>Renew with NameSilo</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="extDomainsTableBody"></tbody>
+            </table>
+          </div>
+          <div class="pagination-bar">
+            <span style="font-size:13px; color:#64748b;" id="extViewingText">Viewing 1–10</span>
+            <div class="pagination-pages" style="margin-left:auto;">
+              <button class="page-btn active">1</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-external-domains -->
+
   </div><!-- /page-body -->
 </div><!-- /main -->
+
+<!-- ── Add External Domains Modal ────────────────────── -->
+<div class="add-ext-modal" id="addExtModal">
+  <div class="add-ext-popup">
+    <div class="add-ext-header">
+      <div class="add-ext-header-left">
+        <span class="add-ext-step-label" id="extStepLabel">Step 1 of 2</span>
+        <h2 class="add-ext-title" id="extModalTitle">Add External Domains</h2>
+        <p class="add-ext-subtitle" id="extModalSubtitle">Paste your domains or upload a CSV file</p>
+      </div>
+      <button class="add-ext-close" id="closeAddExtModal">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="add-ext-body" id="extModalBody">
+      <!-- Step 1: Input -->
+      <div id="extStep1">
+        <label class="textarea-label">Paste domain names (one per line or comma-separated)</label>
+        <textarea class="domain-textarea" id="domainInput" placeholder="example.com&#10;mysite.net&#10;anotherdomain.org"></textarea>
+        <p class="input-hint">You can also paste a list from a spreadsheet</p>
+        <div class="or-divider">or</div>
+        <button class="upload-csv-btn">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload CSV file
+        </button>
+      </div>
+
+      <!-- Step 2: Preview (hidden) -->
+      <div id="extStep2" style="display:none;">
+        <p class="preview-count" id="previewCount"></p>
+        <div style="overflow-x:auto; border-radius:10px; border:1px solid #e0e8ee;">
+          <table class="preview-table" style="border:none;">
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Registrar</th>
+                <th>Renew from</th>
+              </tr>
+            </thead>
+            <tbody id="previewTableBody"></tbody>
+          </table>
+        </div>
+        <div class="preview-warning" id="previewWarning" style="display:none;">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="previewWarningText"></span>
+        </div>
+      </div>
+
+      <!-- Step 3: Success (hidden) -->
+      <div id="extStep3" style="display:none;">
+        <div class="success-state">
+          <div class="success-icon">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="success-title" id="successTitle">Domains added!</h3>
+          <p class="success-desc" id="successDesc">Your external domains are now being tracked. We'll notify you before they expire.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="add-ext-footer">
+      <div class="step-dots" id="extStepDots">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+      </div>
+      <div class="ext-footer-actions" id="extFooterActions">
+        <button class="btn-ghost" id="extBackBtn" style="display:none;">Back</button>
+        <button class="btn-ghost" id="extCancelBtn">Cancel</button>
+        <button class="btn-primary" id="extNextBtn" disabled>
+          <span id="extNextBtnLabel">Next</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ── Success Toast ────────────────────────────────────── -->
 <div class="toast-notification" id="successToast">
@@ -1476,14 +2228,17 @@
 
 <script>
   // ── Horizontal scroll shadow ──────────────────────────────
-  const wrapper = document.querySelector('.table-scroll-wrapper');
+  const wrapper = document.querySelector('#panel-my-domains .table-scroll-wrapper');
   function updateScrollShadow() {
+    if (!wrapper) return;
     const atEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1;
     wrapper.classList.toggle('scrolled-end', atEnd);
     wrapper.classList.toggle('is-scrolled', wrapper.scrollLeft > 0);
   }
-  wrapper.addEventListener('scroll', updateScrollShadow);
-  updateScrollShadow();
+  if (wrapper) {
+    wrapper.addEventListener('scroll', updateScrollShadow);
+    updateScrollShadow();
+  }
 
   // ── Bulk selection logic ──────────────────────────────────
   const checkAll       = document.getElementById('checkAll');
@@ -1628,6 +2383,502 @@
       actionLink.href = `domain-management.html?domain=${encodeURIComponent(domainName)}`;
     }
   });
+
+  // ── Action modals ──────────────────────────────────────────
+  let activeRowDomain = null;
+
+  function closeActionModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  // Edit details
+  function openEditModal(domain, registrar) {
+    activeRowDomain = domain;
+    document.getElementById('editModalDomain').textContent = domain;
+    document.getElementById('editRegistrar').value = registrar;
+    document.getElementById('editExpiry').value = '';
+    document.getElementById('editModal').classList.add('open');
+    closeAllDropdowns();
+  }
+  function saveEditDetails() {
+    const reg = document.getElementById('editRegistrar').value.trim();
+    if (reg && activeRowDomain) {
+      const d = storedExtDomains.find(d => d.domain === activeRowDomain);
+      if (d) d.registrar = reg;
+      renderExtTable();
+    }
+    closeActionModal('editModal');
+    showExtToast('Details updated');
+  }
+
+  // Renewal reminder
+  function openReminderModal(domain) {
+    activeRowDomain = domain;
+    document.getElementById('reminderModalDomain').textContent = domain;
+    document.getElementById('reminderEmail').value = '';
+    document.getElementById('reminderModal').classList.add('open');
+    closeAllDropdowns();
+  }
+  function selectChip(chip) {
+    chip.closest('.reminder-options').querySelectorAll('.reminder-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+  }
+  function saveReminder() {
+    closeActionModal('reminderModal');
+    showExtToast('Renewal reminder set');
+  }
+
+  // View WHOIS
+  function viewWhois(domain) {
+    closeAllDropdowns();
+    window.open('https://www.whois.com/whois/' + domain, '_blank');
+  }
+
+  // Remove domain
+  function openRemoveModal(domain) {
+    activeRowDomain = domain;
+    document.getElementById('removeModalDomain').textContent = domain;
+    document.getElementById('removeModalDomainInline').textContent = domain;
+    document.getElementById('removeModal').classList.add('open');
+    closeAllDropdowns();
+  }
+  function confirmRemoveDomain() {
+    storedExtDomains = storedExtDomains.filter(d => d.domain !== activeRowDomain);
+    closeActionModal('removeModal');
+    if (storedExtDomains.length === 0) {
+      extTableView.style.display = 'none';
+      extEmptyState.style.display = '';
+    } else {
+      renderExtTable();
+    }
+    showExtToast('Domain removed');
+  }
+
+  // Close modals on backdrop click (elements are rendered after this script — use delegation)
+  document.addEventListener('click', e => {
+    ['editModal','reminderModal','removeModal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && e.target === el) closeActionModal(id);
+    });
+  });
+
+  // Toast for ext actions
+  function showExtToast(msg) {
+    successToast.querySelector('.toast-text').textContent = msg;
+    successToast.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => successToast.classList.remove('visible'), 3000);
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.row-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.more-btn.active').forEach(b => b.classList.remove('active'));
+  }
+
+  // ── Row dropdown (⋯ menu) ──────────────────────────────────
+  function toggleRowDropdown(btn) {
+    const dropdown = btn.nextElementSibling;
+    const isOpen = dropdown.classList.contains('open');
+    // close all open dropdowns first
+    document.querySelectorAll('.row-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.more-btn.active').forEach(b => b.classList.remove('active'));
+    if (!isOpen) {
+      dropdown.classList.add('open');
+      btn.classList.add('active');
+    }
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.ext-row-actions')) {
+      document.querySelectorAll('.row-dropdown.open').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.more-btn.active').forEach(b => b.classList.remove('active'));
+    }
+  });
+
+  // ── Tab switching ──────────────────────────────────────────
+  document.querySelectorAll('.tab[data-tab]').forEach(tab => {
+    tab.addEventListener('click', () => {
+
+      document.querySelectorAll('.tab[data-tab]').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const panel = document.getElementById('panel-' + tab.dataset.tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // ── Add External Domains Modal ─────────────────────────────
+  const addExtModal    = document.getElementById('addExtModal');
+  const openAddExtBtn  = document.getElementById('openAddExtModal');
+  const closeAddExtBtn = document.getElementById('closeAddExtModal');
+  const extCancelBtn   = document.getElementById('extCancelBtn');
+  const extNextBtn     = document.getElementById('extNextBtn');
+  const extBackBtn     = document.getElementById('extBackBtn');
+  const extNextBtnLabel = document.getElementById('extNextBtnLabel');
+  const domainInput    = document.getElementById('domainInput');
+  const extStep1       = document.getElementById('extStep1');
+  const extStep2       = document.getElementById('extStep2');
+  const extStep3       = document.getElementById('extStep3');
+  const extStepLabel   = document.getElementById('extStepLabel');
+  const extModalTitle  = document.getElementById('extModalTitle');
+  const extModalSubtitle = document.getElementById('extModalSubtitle');
+  const previewTableBody = document.getElementById('previewTableBody');
+  const previewCount   = document.getElementById('previewCount');
+  const previewWarning = document.getElementById('previewWarning');
+  const previewWarningText = document.getElementById('previewWarningText');
+  const dot1 = document.getElementById('dot1');
+  const dot2 = document.getElementById('dot2');
+  const successTitle = document.getElementById('successTitle');
+  const successDesc  = document.getElementById('successDesc');
+  const extStepDots  = document.getElementById('extStepDots');
+  const extFooterActions = document.getElementById('extFooterActions');
+
+  // Sample registrars & renewal prices for demo
+  const REGISTRARS = ['GoDaddy', 'Namecheap', 'Google Domains', 'Hover', 'Network Solutions', 'Bluehost'];
+  const PRICES = { '.com': 8.99, '.net': 10.99, '.org': 9.99, '.io': 39.99, '.co': 24.99, '.here': 14.99 };
+
+  let currentStep = 1;
+  let parsedDomains = [];
+
+  function openAddExt() {
+    currentStep = 1;
+    renderStep();
+    addExtModal.classList.add('open');
+    domainInput.value = '';
+    extNextBtn.disabled = true;
+  }
+
+  function closeAddExt() {
+    addExtModal.classList.remove('open');
+  }
+
+  function parseDomains(raw) {
+    return raw.split(/[\n,]+/).map(d => d.trim().toLowerCase()).filter(d => d.length > 0);
+  }
+
+  function isValidDomain(d) {
+    return /^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?(\.[a-z]{2,})+$/.test(d);
+  }
+
+  function getExt(d) {
+    const m = d.match(/(\.[^.]+)$/);
+    return m ? m[1] : '.com';
+  }
+
+  function getRenewalPrice(domain) {
+    const ext = getExt(domain);
+    const base = PRICES[ext] || 11.99;
+    // simulate a "from" price slightly lower
+    return (base * 0.85).toFixed(2);
+  }
+
+  function renderStep() {
+    extStep1.style.display = 'none';
+    extStep2.style.display = 'none';
+    extStep3.style.display = 'none';
+    extBackBtn.style.display = 'none';
+    extStepDots.style.display = 'flex';
+
+    dot1.className = 'step-dot';
+    dot2.className = 'step-dot';
+
+    if (currentStep === 1) {
+      extStep1.style.display = '';
+      extStepLabel.textContent = 'Step 1 of 2';
+      extModalTitle.textContent = 'Add External Domains';
+      extModalSubtitle.textContent = 'Paste your domains or upload a CSV file';
+      extNextBtnLabel.textContent = 'Next';
+      extCancelBtn.style.display = '';
+      extBackBtn.style.display = 'none';
+      extNextBtn.style.display = '';
+      extNextBtn.disabled = !domainInput.value.trim();
+      dot1.className = 'step-dot active';
+      dot2.className = 'step-dot';
+      extNextBtn.innerHTML = '<span>Next</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>';
+
+    } else if (currentStep === 2) {
+      extStep2.style.display = '';
+      extStepLabel.textContent = 'Step 2 of 2';
+      extModalTitle.textContent = 'Review domains';
+      extModalSubtitle.textContent = 'Confirm the domains you want to track';
+      extBackBtn.style.display = '';
+      extCancelBtn.style.display = 'none';
+      extNextBtn.disabled = false;
+      dot1.className = 'step-dot done';
+      dot2.className = 'step-dot active';
+
+      // Parse and render preview
+      const allDomains = parseDomains(domainInput.value);
+      const valid = allDomains.filter(isValidDomain);
+      const invalid = allDomains.filter(d => !isValidDomain(d));
+      parsedDomains = valid;
+
+      previewCount.innerHTML = `<strong>${valid.length} domain${valid.length !== 1 ? 's' : ''}</strong> ready to add`;
+
+      previewTableBody.innerHTML = valid.map(d => {
+        const reg = REGISTRARS[Math.floor(Math.random() * REGISTRARS.length)];
+        const price = getRenewalPrice(d);
+        return `<tr>
+          <td><strong>${d}</strong></td>
+          <td><span class="registrar-badge">${reg}</span></td>
+          <td><span class="from-price"><span class="from-label">from</span> $${price}</span></td>
+        </tr>`;
+      }).join('');
+
+      if (invalid.length > 0) {
+        previewWarning.style.display = 'flex';
+        previewWarningText.textContent = `${invalid.length} entry${invalid.length > 1 ? 'ies' : 'y'} skipped (invalid format): ${invalid.join(', ')}`;
+      } else {
+        previewWarning.style.display = 'none';
+      }
+
+      extNextBtn.innerHTML = `<span>Add ${valid.length} domain${valid.length !== 1 ? 's' : ''}</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    } else if (currentStep === 3) {
+      extStep3.style.display = '';
+      extStepDots.style.display = 'none';
+      extStepLabel.textContent = '';
+      extModalTitle.textContent = '';
+      extModalSubtitle.textContent = '';
+      extBackBtn.style.display = 'none';
+      extCancelBtn.style.display = 'none';
+      extNextBtn.innerHTML = '<span>Go to External Domains</span>';
+      extNextBtn.disabled = false;
+      successTitle.textContent = `${parsedDomains.length} domain${parsedDomains.length !== 1 ? 's' : ''} added!`;
+      successDesc.textContent = `Your external domains are now tracked. We'll compare renewal prices and alert you before they expire.`;
+    }
+  }
+
+  const extEmptyState   = document.getElementById('extEmptyState');
+  const extTableView    = document.getElementById('extTableView');
+  const extDomainsTableBody = document.getElementById('extDomainsTableBody');
+  const extDomainCount  = document.getElementById('extDomainCount');
+  const extViewingText  = document.getElementById('extViewingText');
+  const openAddExtModal2 = document.getElementById('openAddExtModal2');
+
+  // Sample data shown when demo domains are loaded
+  let storedExtDomains = [];
+
+  const STATUS_MAP = { active: 'Active', expiring: 'Expiring soon', expired: 'Expired' };
+  const STATUS_CLASS = { active: 'ext-status-active', expiring: 'ext-status-expiring', expired: 'ext-status-expired' };
+
+  function getStatus(domain) {
+    // deterministic demo status based on domain name length
+    const n = domain.length % 3;
+    return n === 0 ? 'expiring' : n === 1 ? 'expired' : 'active';
+  }
+
+  function getExpDate(domain) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const base = domain.charCodeAt(0) % 12;
+    const year = 2025 + (domain.charCodeAt(1) % 2);
+    return `${months[base]} ${(base % 28) + 1}, ${year}`;
+  }
+
+  function renderExtTable() {
+    const count = storedExtDomains.length;
+    extDomainCount.textContent = count;
+    extViewingText.textContent = `Viewing 1–${count}`;
+
+    extDomainsTableBody.innerHTML = storedExtDomains.map(d => {
+      const status = getStatus(d.domain);
+      const expDate = getExpDate(d.domain);
+      const expClass = status === 'expiring' ? 'soon' : status === 'expired' ? 'expired' : '';
+      return `<tr>
+        <td><input type="checkbox" class="checkbox" /></td>
+        <td><span class="ext-domain-name">${d.domain}</span></td>
+        <td><span class="registrar-pill"><span class="registrar-dot"></span>${d.registrar}</span></td>
+        <td><span class="exp-date ${expClass}">${expDate}</span></td>
+        <td><span class="ext-status-badge ${STATUS_CLASS[status]}">${STATUS_MAP[status]}</span></td>
+        <td>
+          <div class="renewal-col">
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span class="renewal-namesilo-price">$${d.price}<small>/yr</small></span>
+              <span class="renewal-current-price">$${d.currentPrice}</span>
+            </div>
+            <span class="renewal-save-badge">Save $${d.savings}/yr</span>
+          </div>
+        </td>
+        <td>
+          <div class="ext-row-actions">
+            <button class="transfer-btn">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              Transfer to NameSilo
+            </button>
+            <button class="more-btn" onclick="toggleRowDropdown(this)">⋯</button>
+            <div class="row-dropdown">
+              <div class="row-dd-item" onclick="openEditModal('${d.domain}', '${d.registrar}')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Edit details
+              </div>
+              <div class="row-dd-item" onclick="openReminderModal('${d.domain}')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Set renewal reminder
+              </div>
+              <div class="row-dd-item" onclick="viewWhois('${d.domain}')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                View WHOIS
+              </div>
+              <div class="row-dd-divider"></div>
+              <div class="row-dd-item danger" onclick="openRemoveModal('${d.domain}')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                Remove domain
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    extEmptyState.style.display = 'none';
+    extTableView.style.display = '';
+  }
+
+  openAddExtBtn.addEventListener('click', openAddExt);
+  if (openAddExtModal2) openAddExtModal2.addEventListener('click', openAddExt);
+  closeAddExtBtn.addEventListener('click', closeAddExt);
+  extCancelBtn.addEventListener('click', closeAddExt);
+  addExtModal.addEventListener('click', e => { if (e.target === addExtModal) closeAddExt(); });
+
+  domainInput.addEventListener('input', () => {
+    extNextBtn.disabled = !domainInput.value.trim();
+  });
+
+  extBackBtn.addEventListener('click', () => {
+    currentStep--;
+    renderStep();
+  });
+
+  extNextBtn.addEventListener('click', () => {
+    if (currentStep === 3) {
+      closeAddExt();
+      // Switch to external domains tab and show table
+      document.querySelectorAll('.tab[data-tab]').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelector('.tab[data-tab="external-domains"]').classList.add('active');
+      document.getElementById('panel-external-domains').classList.add('active');
+      renderExtTable();
+      return;
+    }
+    if (currentStep === 2) {
+      // Collect domains with their info for storage
+      const allDomains = parseDomains(domainInput.value);
+      const valid = allDomains.filter(isValidDomain);
+      valid.forEach(domain => {
+        if (!storedExtDomains.find(d => d.domain === domain)) {
+          const reg = REGISTRARS[Math.abs(domain.charCodeAt(0) - 97) % REGISTRARS.length];
+          const price = parseFloat(getRenewalPrice(domain));
+          const currentPrice = (price * (1.3 + (domain.charCodeAt(2) % 10) / 20)).toFixed(2);
+          const savings = (currentPrice - price).toFixed(2);
+          storedExtDomains.push({ domain, registrar: reg, price: price.toFixed(2), currentPrice, savings });
+        }
+      });
+    }
+    currentStep++;
+    renderStep();
+  });
 </script>
+
+<!-- ── Edit Details Modal ───────────────────────────────── -->
+<div class="action-modal" id="editModal">
+  <div class="action-popup">
+    <div class="action-popup-header">
+      <div>
+        <div class="action-popup-title">Edit domain details</div>
+        <div class="action-popup-domain" id="editModalDomain"></div>
+      </div>
+      <button class="add-ext-close" onclick="closeActionModal('editModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="action-popup-body">
+      <div class="form-field">
+        <label class="form-label">Current registrar</label>
+        <input class="form-input" id="editRegistrar" type="text" placeholder="e.g. GoDaddy" />
+      </div>
+      <div class="form-field">
+        <label class="form-label">Expiration date</label>
+        <input class="form-input" id="editExpiry" type="date" />
+      </div>
+    </div>
+    <div class="action-popup-footer">
+      <button class="btn-ghost" onclick="closeActionModal('editModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveEditDetails()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Renewal Reminder Modal ────────────────────────────── -->
+<div class="action-modal" id="reminderModal">
+  <div class="action-popup">
+    <div class="action-popup-header">
+      <div>
+        <div class="action-popup-title">Set renewal reminder</div>
+        <div class="action-popup-domain" id="reminderModalDomain"></div>
+      </div>
+      <button class="add-ext-close" onclick="closeActionModal('reminderModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="action-popup-body">
+      <div class="form-field">
+        <label class="form-label">Remind me before expiration</label>
+        <div class="reminder-options">
+          <button class="reminder-chip" onclick="selectChip(this)">14 days</button>
+          <button class="reminder-chip selected" onclick="selectChip(this)">30 days</button>
+          <button class="reminder-chip" onclick="selectChip(this)">60 days</button>
+          <button class="reminder-chip" onclick="selectChip(this)">90 days</button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Email address</label>
+        <input class="form-input" id="reminderEmail" type="email" placeholder="you@example.com" />
+      </div>
+    </div>
+    <div class="action-popup-footer">
+      <button class="btn-ghost" onclick="closeActionModal('reminderModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveReminder()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Set reminder
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Remove Domain Modal ───────────────────────────────── -->
+<div class="action-modal" id="removeModal">
+  <div class="action-popup">
+    <div class="action-popup-header">
+      <div>
+        <div class="action-popup-title">Remove domain</div>
+        <div class="action-popup-domain" id="removeModalDomain"></div>
+      </div>
+      <button class="add-ext-close" onclick="closeActionModal('removeModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="action-popup-body">
+      <div class="remove-warning">
+        <div class="remove-warning-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <p class="remove-warning-text">This will stop tracking <strong id="removeModalDomainInline"></strong>. You won't receive renewal reminders and we'll no longer compare prices for it. The domain stays at its current registrar.</p>
+      </div>
+    </div>
+    <div class="action-popup-footer">
+      <button class="btn-ghost" onclick="closeActionModal('removeModal')">Cancel</button>
+      <button class="btn-danger" onclick="confirmRemoveDomain()">Remove domain</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Agentation visual feedback overlay (dev only) -->
+  <div id="__agentation_root__"></div>
+  <script type="module">
+    import React from "https://esm.sh/react@18";
+    import { createRoot } from "https://esm.sh/react-dom@18/client";
+    import { Agentation } from "https://esm.sh/agentation";
+    const root = createRoot(document.getElementById("__agentation_root__"));
+    root.render(React.createElement(Agentation, { endpoint: "http://localhost:4747" }));
+  </script>
 </body>
 </html>

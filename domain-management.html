@@ -1637,5 +1637,20 @@ function connectHosting() {
     </div>
   </div>
 </div>
+
+  <!-- Agentation visual feedback overlay (dev only) -->
+  <div id="__agentation_root__" style="position:fixed;z-index:99999;bottom:0;right:0;"></div>
+  <script type="module">
+    try {
+      const React = (await import("https://esm.sh/react@18")).default;
+      const { createRoot } = await import("https://esm.sh/react-dom@18/client");
+      const { Agentation } = await import("https://esm.sh/agentation@2.3.2");
+      const root = createRoot(document.getElementById("__agentation_root__"));
+      root.render(React.createElement(Agentation, { endpoint: "http://localhost:4747" }));
+      console.log("[Agentation] loaded OK");
+    } catch(e) {
+      console.error("[Agentation] error:", e);
+    }
+  </script>
 </body>
 </html>

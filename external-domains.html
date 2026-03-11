@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>External Domains | NameSilo</title>
+  <style>
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: pageFadeIn 0.25s ease; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1d293d;
+      background: #f2f6fa;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ──────────────────────────────────────────── */
+    .sidebar {
+      width: 208px;
+      min-width: 208px;
+      background: #f2f6fa;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 18px 16px 14px;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: #052f4a;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-text { font-size: 16px; font-weight: 700; color: #0f1c2e; letter-spacing: -0.3px; }
+    .logo-text span { color: #00a6f4; }
+    .sidebar-collapse-btn {
+      margin-left: auto;
+      background: none; border: none; cursor: pointer; color: #94a3b8;
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+    }
+    .sidebar-collapse-btn:hover { background: #e2e8f0; }
+    .get-domain-btn {
+      margin: 0 12px 12px;
+      background: #00a6f4; color: #fff; border: none; border-radius: 10px;
+      padding: 10px 14px; font-size: 14px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: calc(100% - 24px);
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.2);
+      transition: background 0.15s;
+    }
+    .get-domain-btn:hover { background: #0090d4; }
+    .nav-section { padding: 4px 0; display: flex; flex-direction: column; gap: 2px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; color: #45556c; font-size: 13.5px; font-weight: 500;
+      cursor: pointer; border-radius: 6px; margin: 0 6px; text-decoration: none;
+      transition: background 0.12s, color 0.12s;
+    }
+    .nav-item:hover { background: #dde8f0; color: #0f172a; }
+    .nav-item.active { color: #0f172a; background: #dde8f0; }
+    .nav-item svg { flex-shrink: 0; color: #64748b; }
+    .nav-item.active svg { color: #00a6f4; }
+    .nav-chevron { margin-left: auto; color: #94a3b8; font-size: 10px; }
+    .sidebar-footer { margin-top: auto; padding: 16px 12px 20px; display: flex; flex-direction: column; gap: 16px; }
+    .need-help-wrap { background: rgba(0,132,209,0.06); border-radius: 12px; padding: 4px; }
+    .need-help-card {
+      background: #fff; border-radius: 8px; padding: 14px;
+      display: flex; flex-direction: column; gap: 12px;
+      box-shadow: 0 1px 1px rgba(2,74,112,0.05), 0 3px 3px rgba(2,74,112,0.05);
+    }
+    .need-help-text { display: flex; flex-direction: column; gap: 2px; }
+    .need-help-title { font-size: 14px; font-weight: 500; color: #1d293d; }
+    .need-help-sub { font-size: 13px; color: #45556c; }
+    .go-to-website {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13.5px; color: #45556c; cursor: pointer; text-decoration: none;
+    }
+    .go-to-website:hover { color: #1d293d; }
+    .go-website-icon {
+      width: 28px; height: 28px; border: 1px solid #e0e8ee; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: #64748b; background: #fff;
+    }
+
+    /* ─── Main ─────────────────────────────────────────────── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .top-header {
+      background: #f2f6fa; border-bottom: 1px solid #e2e8f0;
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; gap: 16px; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 500; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .info-btn { background: none; border: none; cursor: pointer; color: #94a3b8; display: flex; align-items: center; }
+    .info-btn:hover { color: #64748b; }
+    .header-actions { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+    .header-stat { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #475569; }
+    .bell-btn { background: none; border: none; cursor: pointer; color: #64748b; display: flex; align-items: center; }
+    .cart-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; color: #475569; font-size: 13px; font-weight: 500; }
+    .user-avatar {
+      width: 34px; height: 34px; background: #64748b; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+
+    /* ─── Page body ─────────────────────────────────────────── */
+    .page-body { flex: 1; overflow-y: auto; padding: 24px; }
+
+    /* ─── Tab nav ───────────────────────────────────────────── */
+    .tab-nav { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; }
+    .tab {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 20px; font-size: 13.5px; font-weight: 500; color: #64748b;
+      cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+      white-space: nowrap; text-decoration: none;
+    }
+    .tab:hover { color: #0f172a; }
+    .tab.active { color: #00a6f4; border-bottom-color: #00a6f4; font-weight: 600; }
+
+    /* ─── Empty state ───────────────────────────────────────── */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 80px 24px; text-align: center;
+    }
+    .empty-icon {
+      width: 64px; height: 64px; background: #f1f5f9; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      color: #64748b; margin-bottom: 20px;
+    }
+    .empty-title { font-size: 18px; font-weight: 600; color: #1d293d; margin-bottom: 8px; }
+    .empty-desc { font-size: 14px; color: #64748b; line-height: 1.6; max-width: 440px; margin-bottom: 28px; }
+    .empty-desc strong { color: #45556c; font-weight: 500; }
+
+    /* ─── Buttons ───────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #00a6f4;
+      color: #fff; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.2);
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #0090d4; }
+    .btn-primary.sm { padding: 7px 14px; font-size: 13px; border-radius: 8px; }
+    .btn-ghost {
+      border: 1px solid #e0e8ee; background: none; border-radius: 10px;
+      padding: 9px 16px; font-size: 14px; font-weight: 500; color: #45556c;
+      cursor: pointer; font-family: inherit;
+    }
+    .btn-ghost:hover { background: #f8fafc; }
+    .btn-danger {
+      background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%), #dc2626;
+      color: #fff; border: none; border-radius: 10px; padding: 9px 18px;
+      font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+      box-shadow: 0 0 0 1px #dc2626, 0 1px 2px rgba(2,6,24,0.15);
+    }
+    .btn-danger:hover { background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #b91c1c; }
+
+    /* ─── Table card ────────────────────────────────────────── */
+    .table-card { background: #fff; border-radius: 12px; border: 1px solid #e0e8ee; overflow: hidden; }
+    .table-card-header {
+      display: flex; align-items: center; padding: 14px 16px;
+      border-bottom: 1px solid #e0e8ee; gap: 12px;
+    }
+    .table-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #0f172a; }
+    .count-badge {
+      background: #052f4a; color: #fff; font-size: 9px; font-weight: 700;
+      min-width: 18px; height: 18px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center; padding: 0 4px;
+    }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      width: 36px; height: 36px; border: 1px solid #e0e8ee; border-radius: 8px;
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #64748b; transition: background 0.12s;
+    }
+    .icon-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    /* ─── Toolbar ────────────────────────────────────────────── */
+    .toolbar {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    }
+    .search-wrap { position: relative; width: 320px; }
+    .search-icon {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      color: #94a3b8; pointer-events: none;
+    }
+    .search-input {
+      width: 100%; padding: 9px 13px 9px 34px;
+      border: 1px solid #e0e8ee; border-radius: 10px;
+      background: #fff; font-size: 14px; color: #1d293d; outline: none;
+      transition: border-color 0.15s; font-family: inherit;
+    }
+    .search-input:focus { border-color: #00a6f4; }
+    .search-input::placeholder { color: #94a3b8; }
+    .filter-wrap { position: relative; }
+    .filter-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 13px; border: 1px solid #e0e8ee; border-radius: 10px;
+      background: #fff; font-size: 14px; font-weight: 500; color: #052f4a;
+      cursor: pointer; white-space: nowrap; font-family: inherit;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .filter-btn:hover { border-color: #94a3b8; background: #f8fafc; }
+    .filter-btn.active { border-color: #00a6f4; background: #f0fbff; color: #0090d4; }
+    .filter-active-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #00a6f4; flex-shrink: 0;
+    }
+    .filter-panel {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0;
+      background: #fff; border: 1px solid #e0e8ee; border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(2,6,24,0.12); padding: 16px;
+      min-width: 300px; z-index: 200;
+    }
+    .filter-panel.open { display: block; }
+    .filter-group { margin-bottom: 16px; }
+    .filter-group-label {
+      font-size: 11px; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px;
+    }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filter-chip {
+      padding: 5px 11px; border: 1px solid #e0e8ee; border-radius: 20px;
+      font-size: 13px; color: #45556c; cursor: pointer; background: #fff;
+      font-family: inherit; transition: border-color 0.12s, background 0.12s;
+    }
+    .filter-chip:hover { border-color: #94a3b8; background: #f8fafc; }
+    .filter-chip.sel { border-color: #00a6f4; background: #e8f8ff; color: #0090d4; font-weight: 600; }
+    .filter-footer {
+      display: flex; justify-content: flex-end; align-items: center; gap: 8px;
+      padding-top: 12px; border-top: 1px solid #f1f5f9; margin-top: 4px;
+    }
+    .filter-clear {
+      background: none; border: none; font-size: 13px; color: #64748b;
+      cursor: pointer; padding: 4px 8px; border-radius: 6px; font-family: inherit;
+    }
+    .filter-clear:hover { color: #334155; background: #f1f5f9; }
+    .no-results {
+      text-align: center; padding: 48px 16px; color: #94a3b8; font-size: 14px;
+    }
+    .no-results svg { margin-bottom: 10px; color: #cbd5e1; }
+
+    /* ─── Table ─────────────────────────────────────────────── */
+    .table-scroll { overflow-x: auto; }
+    .ext-table { width: 100%; border-collapse: collapse; }
+    .ext-table th {
+      background: #fff; font-size: 12px; font-weight: 600; color: #64748b;
+      text-align: left; padding: 11px 16px; border-bottom: 1px solid #e0e8ee;
+      white-space: nowrap; user-select: none;
+    }
+    .ext-table th:first-child { width: 44px; }
+    .ext-table td {
+      padding: 14px 16px; border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle; font-size: 13.5px; color: #334155;
+    }
+    .ext-table tr:last-child td { border-bottom: none; }
+    .ext-table tr:hover td { background: #f8fafc; }
+
+    .checkbox {
+      appearance: none; -webkit-appearance: none;
+      width: 16px; height: 16px; min-width: 16px;
+      border: 1.5px solid #cbd5e1; border-radius: 4px; cursor: pointer;
+      background: #fff; position: relative; display: inline-flex;
+      align-items: center; justify-content: center; vertical-align: middle;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .checkbox:checked { background: #00a6f4; border-color: #00a6f4; }
+    .checkbox:checked::after {
+      content: ''; position: absolute; left: 4px; top: 1.5px;
+      width: 5px; height: 8px; border: 2px solid #fff;
+      border-top: none; border-left: none; transform: rotate(45deg);
+    }
+
+    .domain-cell { font-weight: 500; color: #1d293d; }
+
+    .registrar-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12.5px; font-weight: 500; color: #45556c;
+      background: #f1f5f9; border: 1px solid #e0e8ee;
+      padding: 4px 9px; border-radius: 8px; white-space: nowrap;
+    }
+    .registrar-dot { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; flex-shrink: 0; }
+
+    .exp-date { font-size: 13px; color: #45556c; white-space: nowrap; }
+    .exp-date.soon { color: #b45309; font-weight: 500; }
+    .exp-date.expired { color: #dc2626; font-weight: 500; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500; padding: 3px 9px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .status-active   { background: #dcfce7; color: #166534; }
+    .status-active::before   { background: #16a34a; }
+    .status-expiring { background: #fef3c7; color: #92400e; }
+    .status-expiring::before { background: #d97706; }
+    .status-expired  { background: #fee2e2; color: #991b1b; }
+    .status-expired::before  { background: #dc2626; }
+    .status-restore  { background: #f3e8ff; color: #6b21a8; }
+    .status-restore::before  { background: #9333ea; }
+
+    .namesilo-price { font-size: 14px; font-weight: 600; color: #1d293d; }
+    .namesilo-price small { font-size: 11px; font-weight: 400; color: #94a3b8; margin-left: 1px; }
+
+    .transfer-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #00a6f4;
+      color: #fff; border: none; border-radius: 8px;
+      font-size: 12.5px; font-weight: 500; cursor: pointer; white-space: nowrap;
+      box-shadow: 0 0 0 1px #00a6f4, 0 1px 2px rgba(2,6,24,0.15);
+      transition: background 0.12s; font-family: inherit;
+    }
+    .transfer-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #0090d4; }
+
+    .row-actions { display: flex; align-items: center; gap: 6px; position: relative; }
+    .more-btn {
+      width: 30px; height: 30px; background: none;
+      border: 1px solid #e0e8ee; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #64748b; font-size: 16px; line-height: 1;
+      transition: background 0.12s;
+    }
+    .more-btn:hover, .more-btn.active { background: #f1f5f9; border-color: #94a3b8; }
+
+    /* ─── Row dropdown ──────────────────────────────────────── */
+    .row-dropdown {
+      display: none; position: absolute; top: calc(100% + 6px); right: 0;
+      background: #fff; border: 1px solid #e0e8ee; border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.06), 0 12px 28px rgba(0,0,0,0.1);
+      z-index: 200; min-width: 200px; padding: 4px;
+    }
+    .row-dropdown.open { display: block; }
+    .dd-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; font-size: 13.5px; color: #1d293d;
+      cursor: pointer; border-radius: 8px; transition: background 0.1s;
+    }
+    .dd-item:hover { background: #f1f5f9; }
+    .dd-item svg { flex-shrink: 0; color: #64748b; }
+    .dd-item.danger { color: #dc2626; }
+    .dd-item.danger svg { color: #dc2626; }
+    .dd-item.danger:hover { background: #fff1f2; }
+    .dd-divider { height: 1px; background: #f1f5f9; margin: 4px 0; }
+
+    /* ─── Pagination ────────────────────────────────────────── */
+    .pagination-bar {
+      display: flex; align-items: center; padding: 12px 16px;
+      border-top: 1px solid #e0e8ee; font-size: 13px; color: #64748b; gap: 8px;
+    }
+    .rows-select {
+      border: 1px solid #e0e8ee; border-radius: 6px; padding: 3px 8px;
+      font-size: 13px; color: #45556c; background: #fff; outline: none; font-family: inherit;
+    }
+    .page-btn {
+      min-width: 30px; height: 30px; border: 1px solid #e0e8ee; border-radius: 6px;
+      background: #fff; font-size: 13px; color: #475569;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; padding: 0 6px; transition: background 0.12s; font-family: inherit;
+    }
+    .page-btn.active { background: #052f4a; border-color: #052f4a; color: #fff; font-weight: 600; }
+    .page-btn:hover:not(.active) { background: #f8fafc; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ─── Modals ────────────────────────────────────────────── */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(3,20,31,0.45); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 20px;
+      width: 560px; max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 48px); overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 1px 1px rgba(2,74,112,0.05), 0 5px 12px 6px rgba(2,74,112,0.1), 0 20px 40px rgba(2,74,112,0.12);
+    }
+    .modal-box.sm { width: 440px; }
+    .modal-header {
+      padding: 20px 20px 0;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .modal-header-left { display: flex; flex-direction: column; gap: 4px; }
+    .modal-step-label { font-size: 11px; font-weight: 600; color: #00a6f4; text-transform: uppercase; letter-spacing: 0.6px; }
+    .modal-title { font-size: 18px; font-weight: 600; color: #1d293d; }
+    .modal-subtitle { font-size: 14px; color: #64748b; }
+    .modal-close-btn {
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      border: none; background: none; cursor: pointer; border-radius: 8px; color: #64748b; flex-shrink: 0;
+    }
+    .modal-close-btn:hover { background: #f1f5f9; }
+    .modal-body { padding: 0 20px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .modal-footer {
+      padding: 16px 20px; border-top: 1px solid #e0e8ee;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .modal-footer-right { display: flex; gap: 8px; align-items: center; }
+
+    /* Step dots */
+    .step-dots { display: flex; gap: 6px; align-items: center; }
+    .step-dot { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; transition: all 0.2s; }
+    .step-dot.active { background: #00a6f4; width: 18px; border-radius: 3px; }
+    .step-dot.done { background: #00a6f4; opacity: 0.4; }
+
+    /* Form fields */
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 13px; font-weight: 500; color: #1d293d; }
+    .form-input {
+      height: 40px; border: 1.5px solid #e0e8ee; border-radius: 8px;
+      padding: 0 12px; font-size: 14px; color: #1d293d; outline: none; font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus { border-color: #00a6f4; box-shadow: 0 0 0 3px rgba(0,166,244,0.12); }
+
+    /* Textarea */
+    .domain-textarea {
+      width: 100%; height: 160px; border: 1.5px solid #e0e8ee; border-radius: 10px;
+      padding: 12px; font-size: 13px; font-family: 'SFMono-Regular', Consolas, monospace;
+      color: #1d293d; resize: vertical; outline: none; line-height: 1.6;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .domain-textarea::placeholder { color: #94a3b8; font-family: inherit; }
+    .domain-textarea:focus { border-color: #00a6f4; box-shadow: 0 0 0 3px rgba(0,166,244,0.12); }
+    .input-hint { font-size: 12px; color: #94a3b8; }
+    .or-divider {
+      display: flex; align-items: center; gap: 12px;
+      color: #94a3b8; font-size: 12px;
+    }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: #e0e8ee; }
+    .upload-csv-btn {
+      width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+      height: 44px; border: 1.5px dashed #cbd5e1; border-radius: 10px;
+      background: #f8fafc; color: #475569; font-size: 13.5px; font-weight: 500;
+      cursor: pointer; transition: border-color 0.15s, background 0.15s; font-family: inherit;
+    }
+    .upload-csv-btn:hover { border-color: #00a6f4; background: #f0f9ff; color: #0084d1; }
+
+    /* Preview table */
+    .preview-table { width: 100%; border-collapse: collapse; }
+    .preview-table th {
+      background: #f8fafc; font-size: 11.5px; font-weight: 600; color: #64748b;
+      text-align: left; padding: 10px 12px; border-bottom: 1px solid #e0e8ee;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .preview-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 13.5px; color: #1d293d; vertical-align: middle; }
+    .preview-table tr:last-child td { border-bottom: none; }
+    .preview-table tr:hover td { background: #f8fafc; }
+    .from-price {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 13px; font-weight: 600; color: #166534;
+      background: #dcfce7; padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+    }
+    .from-label { font-size: 10px; font-weight: 500; color: #15803d; text-transform: uppercase; letter-spacing: 0.4px; }
+    .preview-count { font-size: 13px; color: #64748b; }
+    .preview-count strong { color: #1d293d; font-weight: 600; }
+    .preview-warning {
+      display: flex; align-items: center; gap: 8px;
+      background: #fef9ec; border: 1px solid #fcd34d;
+      border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #92400e;
+    }
+
+    /* Success state */
+    .success-state {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 16px 0 8px; gap: 12px;
+    }
+    .success-icon {
+      width: 64px; height: 64px; background: #dcfce7; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: #16a34a;
+    }
+    .success-title { font-size: 20px; font-weight: 600; color: #1d293d; }
+    .success-desc { font-size: 14px; color: #64748b; line-height: 1.6; max-width: 360px; }
+
+    /* Reminder chips */
+    .reminder-options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .reminder-chip {
+      padding: 7px 14px; border: 1.5px solid #e0e8ee; border-radius: 8px;
+      font-size: 13px; font-weight: 500; color: #45556c; cursor: pointer;
+      background: #fff; transition: all 0.12s; font-family: inherit;
+    }
+    .reminder-chip:hover { border-color: #00a6f4; color: #0084d1; background: #f0f9ff; }
+    .reminder-chip.selected { border-color: #00a6f4; background: #e0f3ff; color: #0084d1; font-weight: 600; }
+
+    /* Remove warning */
+    .remove-warning {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px; padding: 14px;
+    }
+    .remove-warning-icon {
+      width: 36px; height: 36px; background: #fee2e2; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; color: #dc2626; flex-shrink: 0;
+    }
+    .remove-warning-text { font-size: 13.5px; color: #991b1b; line-height: 1.5; }
+    .remove-warning-text strong { color: #7f1d1d; }
+
+    /* Toast */
+    .toast {
+      position: fixed; top: 20px; right: 24px; width: 340px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #e3f7ec;
+      border-radius: 12px; box-shadow: 0 1px 2px rgba(2,6,24,0.06), 0 0 0 1px rgba(0,188,125,0.24);
+      z-index: 9000; display: none; overflow: hidden;
+    }
+    .toast.visible { display: block; }
+    .toast-inner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+    .toast-text { flex: 1; font-size: 14px; font-weight: 500; color: #1d293d; }
+    .toast-close-btn {
+      width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+      border: none; background: none; cursor: pointer; border-radius: 6px; color: #64748b;
+    }
+    .toast-close-btn:hover { background: rgba(0,0,0,0.06); }
+
+    /* Registrar badge in preview */
+    .reg-badge {
+      font-size: 12px; font-weight: 500; color: #45556c;
+      background: #f1f5f9; border: 1px solid #e0e8ee;
+      padding: 3px 8px; border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="8" height="8" rx="1.5" fill="white" opacity="0.9"/>
+        <rect x="13" y="3" width="8" height="8" rx="1.5" fill="white" opacity="0.6"/>
+        <rect x="3" y="13" width="8" height="8" rx="1.5" fill="white" opacity="0.6"/>
+        <rect x="13" y="13" width="8" height="8" rx="1.5" fill="white" opacity="0.3"/>
+      </svg>
+    </div>
+    <span class="logo-text">Name<span>Silo</span></span>
+    <button class="sidebar-collapse-btn">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 3 12 9 6"/></svg>
+    </button>
+  </div>
+  <button class="get-domain-btn">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    Get New Domain
+  </button>
+  <nav class="nav-section">
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item active" href="domain-manager.html">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Domains
+      <span class="nav-chevron">›</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      Services &amp; Add-Ons
+      <span class="nav-chevron">›</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Reseller &amp; API
+      <span class="nav-chevron">›</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Investor Hub
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Website Builder
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="need-help-wrap">
+      <div class="need-help-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2C9 2 9.8 5.6 11 7C12.2 8.4 16 9 16 9C16 9 12.2 9.6 11 11C9.8 12.4 9 16 9 16C9 16 8.2 12.4 7 11C5.8 9.6 2 9 2 9C2 9 5.8 8.4 7 7C8.2 5.6 9 2 9 2Z" fill="#0084d1"/>
+          <path d="M19 2C19 2 19.5 4 20.2 4.8C20.9 5.6 23 6 23 6C23 6 20.9 6.4 20.2 7.2C19.5 8 19 10 19 10C19 10 18.5 8 17.8 7.2C17.1 6.4 15 6 15 6C15 6 17.1 5.6 17.8 4.8C18.5 4 19 2 19 2Z" fill="#0084d1" opacity="0.7"/>
+          <path d="M19 15C19 15 19.4 16.6 19.9 17.1C20.4 17.6 22 18 22 18C22 18 20.4 18.4 19.9 18.9C19.4 19.4 19 21 19 21C19 21 18.6 19.4 18.1 18.9C17.6 18.4 16 18 16 18C16 18 17.6 17.6 18.1 17.1C18.6 16.6 19 15 19 15Z" fill="#0084d1" opacity="0.5"/>
+        </svg>
+        <div class="need-help-text">
+          <span class="need-help-title">Need Help?</span>
+          <span class="need-help-sub">Live Support Chat or Ask AI</span>
+        </div>
+      </div>
+    </div>
+    <a class="go-to-website" href="#">
+      <div class="go-website-icon">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      Go to Website
+    </a>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <header class="top-header">
+    <div class="page-title">
+      Domain Manager
+      <button class="info-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button class="bell-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="header-stat">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        0,00
+      </div>
+      <div class="header-stat">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        0.00
+      </div>
+      <button class="cart-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Cart
+      </button>
+      <div class="user-avatar">JD</div>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- Tab nav -->
+    <nav class="tab-nav">
+      <a class="tab" href="domain-manager.html">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        My Domains
+      </a>
+      <a class="tab active" href="#">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        External Domains
+      </a>
+      <a class="tab" href="#">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Transfer
+      </a>
+      <a class="tab" href="#">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Domain History
+      </a>
+    </nav>
+
+    <!-- Empty state -->
+    <div id="emptyState">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <h2 class="empty-title">Link your external domains</h2>
+        <p class="empty-desc">Track domains registered at <strong>GoDaddy, Namecheap, Google Domains</strong> and other registrars — all from one place. When it's time to renew, we'll show you the best price and let you transfer with one click.</p>
+        <button class="btn-primary" id="btnOpenAdd">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add External Domains
+        </button>
+      </div>
+    </div>
+
+    <!-- Table view -->
+    <div id="tableView" style="display:none;">
+
+      <!-- Toolbar: search + filters + add button -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" id="searchInput" type="text" placeholder="Search by domain name..." />
+        </div>
+        <div class="filter-wrap">
+          <button class="filter-btn" id="filterBtn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filters
+            <span class="filter-active-dot" id="filterDot" style="display:none;"></span>
+          </button>
+          <div class="filter-panel" id="filterPanel">
+            <div class="filter-group">
+              <div class="filter-group-label">Status</div>
+              <div class="filter-chips">
+                <button class="filter-chip" data-type="status" data-val="active">Active</button>
+                <button class="filter-chip" data-type="status" data-val="expiring">Expiring soon</button>
+                <button class="filter-chip" data-type="status" data-val="expired">Expired</button>
+                <button class="filter-chip" data-type="status" data-val="restore">Restore</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <div class="filter-group-label">Registrar</div>
+              <div class="filter-chips" id="registrarChips"></div>
+            </div>
+            <div class="filter-footer">
+              <button class="filter-clear" id="filterClear">Clear all</button>
+              <button class="btn-primary sm" id="filterApply">Apply</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-primary" id="btnOpenAdd2" style="margin-left:auto;">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add External Domains
+        </button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-card-header">
+          <div class="table-title">
+            External Domains
+            <span class="count-badge" id="domainCount">0</span>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn" title="Export CSV">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="ext-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="checkbox" id="checkAll" /></th>
+                <th>Domain</th>
+                <th>Current Registrar</th>
+                <th>Expiration</th>
+                <th>Status</th>
+                <th>Renew with NameSilo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination-bar">
+          <span id="viewingText" style="color:#64748b;font-size:13px;"></span>
+          <span style="color:#cbd5e1;margin:0 4px;">|</span>
+          <div style="display:flex;align-items:center;gap:6px;color:#64748b;font-size:13px;">
+            Rows per page:
+            <select class="rows-select"><option>All</option><option>10</option><option>25</option></select>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:4px;">
+            <button class="page-btn" disabled>
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn" disabled>
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ ADD DOMAINS MODAL ═══ -->
+<div class="modal-backdrop" id="addModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <span class="modal-step-label" id="stepLabel">Step 1 of 2</span>
+        <h2 class="modal-title" id="modalTitle">Add External Domains</h2>
+        <p class="modal-subtitle" id="modalSubtitle">Paste your domains or upload a CSV file</p>
+      </div>
+      <button class="modal-close-btn" onclick="closeModal('addModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Step 1 -->
+      <div id="step1">
+        <div class="form-field">
+          <label class="form-label">Paste domain names (one per line or comma-separated)</label>
+          <textarea class="domain-textarea" id="domainInput" placeholder="example.com&#10;mysite.net&#10;anotherdomain.org"></textarea>
+          <p class="input-hint">You can also paste a list copied from a spreadsheet</p>
+        </div>
+        <div class="or-divider">or</div>
+        <button class="upload-csv-btn">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload CSV file
+        </button>
+      </div>
+      <!-- Step 2 -->
+      <div id="step2" style="display:none;">
+        <p class="preview-count" id="previewCount"></p>
+        <div style="border:1px solid #e0e8ee;border-radius:10px;overflow:hidden;">
+          <table class="preview-table">
+            <thead><tr><th>Domain</th><th>Registrar</th><th>NameSilo price</th></tr></thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+        <div id="previewWarning" style="display:none;" class="preview-warning">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="previewWarningText"></span>
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div id="step3" style="display:none;">
+        <div class="success-state">
+          <div class="success-icon">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="success-title" id="successTitle">Domains added!</h3>
+          <p class="success-desc">Your external domains are now tracked. We'll compare renewal prices and alert you before they expire.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="step-dots" id="stepDots">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+      </div>
+      <div class="modal-footer-right">
+        <button class="btn-ghost" id="btnBack" style="display:none;">Back</button>
+        <button class="btn-ghost" id="btnCancel" onclick="closeModal('addModal')">Cancel</button>
+        <button class="btn-primary" id="btnNext" disabled>
+          <span id="btnNextLabel">Next</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDIT MODAL ═══ -->
+<div class="modal-backdrop" id="editModal">
+  <div class="modal-box sm">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h2 class="modal-title">Edit domain details</h2>
+        <p class="modal-subtitle" id="editDomainLabel"></p>
+      </div>
+      <button class="modal-close-btn" onclick="closeModal('editModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">Current registrar</label>
+        <input class="form-input" id="editRegistrar" type="text" placeholder="e.g. GoDaddy" />
+      </div>
+      <div class="form-field">
+        <label class="form-label">Expiration date</label>
+        <input class="form-input" id="editExpiry" type="date" />
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <div class="modal-footer-right">
+        <button class="btn-ghost" onclick="closeModal('editModal')">Cancel</button>
+        <button class="btn-primary" onclick="saveEdit()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REMINDER MODAL ═══ -->
+<div class="modal-backdrop" id="reminderModal">
+  <div class="modal-box sm">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h2 class="modal-title">Set renewal reminder</h2>
+        <p class="modal-subtitle" id="reminderDomainLabel"></p>
+      </div>
+      <button class="modal-close-btn" onclick="closeModal('reminderModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">Remind me before expiration</label>
+        <div class="reminder-options">
+          <button class="reminder-chip" onclick="selectChip(this)">14 days</button>
+          <button class="reminder-chip selected" onclick="selectChip(this)">30 days</button>
+          <button class="reminder-chip" onclick="selectChip(this)">60 days</button>
+          <button class="reminder-chip" onclick="selectChip(this)">90 days</button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Email address</label>
+        <input class="form-input" id="reminderEmail" type="email" placeholder="you@example.com" />
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <div class="modal-footer-right">
+        <button class="btn-ghost" onclick="closeModal('reminderModal')">Cancel</button>
+        <button class="btn-primary" onclick="saveReminder()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Set reminder
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REMOVE MODAL ═══ -->
+<div class="modal-backdrop" id="removeModal">
+  <div class="modal-box sm">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h2 class="modal-title">Remove domain</h2>
+        <p class="modal-subtitle" id="removeDomainLabel"></p>
+      </div>
+      <button class="modal-close-btn" onclick="closeModal('removeModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="remove-warning">
+        <div class="remove-warning-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <p class="remove-warning-text">This will stop tracking <strong id="removeDomainName"></strong>. You won't receive renewal reminders and we'll no longer compare prices for it. The domain stays at its current registrar.</p>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <div class="modal-footer-right">
+        <button class="btn-ghost" onclick="closeModal('removeModal')">Cancel</button>
+        <button class="btn-danger" onclick="confirmRemove()">Remove domain</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast">
+  <div class="toast-inner">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="8" fill="#00bc7d"/>
+      <path d="M4.5 8L6.5 10L11.5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="toast-text" id="toastText"></span>
+    <button class="toast-close-btn" onclick="hideToast()">
+      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 10 10"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Agentation -->
+<div id="__agentation_root__" style="position:fixed;z-index:99999;bottom:0;right:0;"></div>
+<script type="module">
+  try {
+    const React = (await import("https://esm.sh/react@18")).default;
+    const { createRoot } = await import("https://esm.sh/react-dom@18/client");
+    const { Agentation } = await import("https://esm.sh/agentation@2.3.2");
+    createRoot(document.getElementById("__agentation_root__")).render(
+      React.createElement(Agentation, { endpoint: "http://localhost:4747" })
+    );
+  } catch(e) { console.error("[Agentation]", e); }
+</script>
+
+<script>
+  // ── Data ──────────────────────────────────────────────────
+  const REGISTRARS = ['GoDaddy','Namecheap','Google Domains','Hover','Network Solutions','Bluehost'];
+  const PRICES = {'.com':8.99,'.net':10.99,'.org':9.99,'.io':39.99,'.co':24.99,'.here':14.99};
+  let domains = [];
+  let activeDomain = null;
+  let toastTimer = null;
+  let step = 1;
+  let pendingDomains = [];
+
+  // ── Helpers ───────────────────────────────────────────────
+  function isValid(d) {
+    return /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z]{2,})+$/.test(d);
+  }
+  function getExt(d) {
+    var m = d.match(/(\.[^.]+)$/);
+    return m ? m[1] : '.com';
+  }
+  function namesiloPice(d) {
+    var base = PRICES[getExt(d)] || 11.99;
+    return (base * 0.85).toFixed(2);
+  }
+  function currentPrice(d, ns) {
+    return (parseFloat(ns) * (1.3 + (d.charCodeAt(2) % 10) / 20)).toFixed(2);
+  }
+  function getStatus(d) {
+    var n = d.length % 4;
+    return n === 0 ? 'expiring' : n === 1 ? 'expired' : n === 2 ? 'restore' : 'active';
+  }
+  function getExpDate(d) {
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var base = d.charCodeAt(0) % 12;
+    return months[base] + ' ' + ((base % 28) + 1) + ', ' + (2025 + (d.charCodeAt(1) % 2));
+  }
+
+  // ── Toast ─────────────────────────────────────────────────
+  function showToast(msg) {
+    document.getElementById('toastText').textContent = msg;
+    document.getElementById('toast').classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 3000);
+  }
+  function hideToast() {
+    document.getElementById('toast').classList.remove('visible');
+  }
+
+  // ── Modal helpers ─────────────────────────────────────────
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  // close on backdrop click
+  document.querySelectorAll('.modal-backdrop').forEach(function(m) {
+    m.addEventListener('click', function(e) {
+      if (e.target === m) m.classList.remove('open');
+    });
+  });
+
+  // ── Search & filter state ──────────────────────────────────
+  var searchQuery = '';
+  var filterSel = { statuses: [], registrars: [] };
+
+  function getFiltered() {
+    var q = searchQuery.toLowerCase();
+    return domains.filter(function(d) {
+      var matchQ = !q || d.domain.toLowerCase().indexOf(q) >= 0;
+      var st = getStatus(d.domain);
+      var matchSt = filterSel.statuses.length === 0 || filterSel.statuses.indexOf(st) >= 0;
+      var matchReg = filterSel.registrars.length === 0 || filterSel.registrars.indexOf(d.registrar) >= 0;
+      return matchQ && matchSt && matchReg;
+    });
+  }
+
+  function updateFilterDot() {
+    var count = filterSel.statuses.length + filterSel.registrars.length;
+    var dot = document.getElementById('filterDot');
+    var btn = document.getElementById('filterBtn');
+    dot.style.display = count > 0 ? '' : 'none';
+    btn.classList.toggle('active', count > 0);
+  }
+
+  function buildRegistrarChips() {
+    var seen = {};
+    domains.forEach(function(d) { seen[d.registrar] = true; });
+    var wrap = document.getElementById('registrarChips');
+    if (!wrap) return;
+    wrap.innerHTML = Object.keys(seen).sort().map(function(r) {
+      var sel = filterSel.registrars.indexOf(r) >= 0 ? ' sel' : '';
+      return '<button class="filter-chip' + sel + '" data-type="registrar" data-val="' + r + '">' + r + '</button>';
+    }).join('');
+    wrap.querySelectorAll('.filter-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        chip.classList.toggle('sel');
+      });
+    });
+  }
+
+  // ── Render table ──────────────────────────────────────────
+  function renderTable() {
+    var tb = document.getElementById('tableBody');
+    var list = getFiltered();
+    document.getElementById('domainCount').textContent = domains.length;
+    document.getElementById('viewingText').textContent = list.length > 0 ? 'Viewing 1–' + list.length : 'No results';
+
+    if (list.length === 0) {
+      tb.innerHTML = '<tr><td colspan="7"><div class="no-results">' +
+        '<svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+        '<div>No domains match your search</div></div></td></tr>';
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('tableView').style.display = '';
+      return;
+    }
+
+    tb.innerHTML = list.map(function(d) {
+      var status = getStatus(d.domain);
+      var expDate = d.expiry || getExpDate(d.domain);
+      var expClass = status === 'expiring' ? 'soon' : (status === 'expired' || status === 'restore') ? 'expired' : '';
+      var statusLabel = status === 'active' ? 'Active' : status === 'expiring' ? 'Expiring soon' : status === 'restore' ? 'Restore' : 'Expired';
+      var statusClass = 'status-' + status;
+      return '<tr>' +
+        '<td><input type="checkbox" class="checkbox"></td>' +
+        '<td><span class="domain-cell">' + d.domain + '</span></td>' +
+        '<td><span class="registrar-pill"><span class="registrar-dot"></span>' + d.registrar + '</span></td>' +
+        '<td><span class="exp-date ' + expClass + '">' + expDate + '</span></td>' +
+        '<td><span class="status-badge ' + statusClass + '">' + statusLabel + '</span></td>' +
+        '<td><span class="namesilo-price">$' + d.nsPrice + '<small>/yr</small></span></td>' +
+        '<td><div class="row-actions">' +
+          '<button class="transfer-btn">' +
+            '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+            'Transfer to NameSilo' +
+          '</button>' +
+          '<button class="more-btn" onclick="toggleDd(this)">⋯</button>' +
+          '<div class="row-dropdown">' +
+            '<div class="dd-item" onclick="openEdit(\'' + d.domain + '\',\'' + d.registrar + '\')">' +
+              '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+              'Edit details' +
+            '</div>' +
+            '<div class="dd-item" onclick="openReminder(\'' + d.domain + '\')">' +
+              '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>' +
+              'Set renewal reminder' +
+            '</div>' +
+            '<div class="dd-item" onclick="viewWhois(\'' + d.domain + '\')">' +
+              '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+              'View WHOIS' +
+            '</div>' +
+            '<div class="dd-divider"></div>' +
+            '<div class="dd-item danger" onclick="openRemove(\'' + d.domain + '\')">' +
+              '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+              'Remove domain' +
+            '</div>' +
+          '</div>' +
+        '</div></td>' +
+      '</tr>';
+    }).join('');
+
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('tableView').style.display = '';
+  }
+
+  // ── Search & filter wiring ─────────────────────────────────
+  document.getElementById('searchInput').addEventListener('input', function() {
+    searchQuery = this.value;
+    renderTable();
+  });
+
+  document.getElementById('filterBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    var panel = document.getElementById('filterPanel');
+    var opening = !panel.classList.contains('open');
+    panel.classList.toggle('open');
+    if (opening) buildRegistrarChips();
+  });
+
+  document.getElementById('filterClear').addEventListener('click', function() {
+    filterSel = { statuses: [], registrars: [] };
+    document.querySelectorAll('#filterPanel .filter-chip').forEach(function(c) { c.classList.remove('sel'); });
+    updateFilterDot();
+    renderTable();
+  });
+
+  document.getElementById('filterApply').addEventListener('click', function() {
+    filterSel.statuses = [];
+    filterSel.registrars = [];
+    document.querySelectorAll('#filterPanel .filter-chip.sel').forEach(function(c) {
+      if (c.dataset.type === 'status') filterSel.statuses.push(c.dataset.val);
+      else filterSel.registrars.push(c.dataset.val);
+    });
+    updateFilterDot();
+    document.getElementById('filterPanel').classList.remove('open');
+    renderTable();
+  });
+
+  // Status chips wiring (static chips)
+  document.querySelectorAll('#filterPanel .filter-chip[data-type="status"]').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chip.classList.toggle('sel');
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    var panel = document.getElementById('filterPanel');
+    if (panel && !panel.contains(e.target) && e.target !== document.getElementById('filterBtn')) {
+      panel.classList.remove('open');
+    }
+  });
+
+  // ── Dropdown ──────────────────────────────────────────────
+  function toggleDd(btn) {
+    var dd = btn.nextElementSibling;
+    var wasOpen = dd.classList.contains('open');
+    closeAllDd();
+    if (!wasOpen) { dd.classList.add('open'); btn.classList.add('active'); }
+  }
+  function closeAllDd() {
+    document.querySelectorAll('.row-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+    document.querySelectorAll('.more-btn.active').forEach(function(b) { b.classList.remove('active'); });
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.row-actions')) closeAllDd();
+  });
+
+  // ── Add domains flow ──────────────────────────────────────
+  function openAddModal() {
+    step = 1;
+    document.getElementById('domainInput').value = '';
+    document.getElementById('btnNext').disabled = true;
+    renderStep();
+    openModal('addModal');
+  }
+  document.getElementById('btnOpenAdd').addEventListener('click', openAddModal);
+  document.getElementById('btnOpenAdd2').addEventListener('click', openAddModal);
+
+  document.getElementById('domainInput').addEventListener('input', function() {
+    document.getElementById('btnNext').disabled = !this.value.trim();
+  });
+
+  function renderStep() {
+    var s1 = document.getElementById('step1');
+    var s2 = document.getElementById('step2');
+    var s3 = document.getElementById('step3');
+    var dots = document.getElementById('stepDots');
+    s1.style.display = s2.style.display = s3.style.display = 'none';
+    dots.style.display = 'flex';
+
+    document.getElementById('dot1').className = 'step-dot';
+    document.getElementById('dot2').className = 'step-dot';
+    document.getElementById('btnBack').style.display = 'none';
+    document.getElementById('btnCancel').style.display = '';
+
+    if (step === 1) {
+      s1.style.display = '';
+      document.getElementById('stepLabel').textContent = 'Step 1 of 2';
+      document.getElementById('modalTitle').textContent = 'Add External Domains';
+      document.getElementById('modalSubtitle').textContent = 'Paste your domains or upload a CSV file';
+      document.getElementById('dot1').className = 'step-dot active';
+      document.getElementById('btnNext').innerHTML = '<span>Next</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>';
+      document.getElementById('btnNext').disabled = !document.getElementById('domainInput').value.trim();
+
+    } else if (step === 2) {
+      s2.style.display = '';
+      document.getElementById('stepLabel').textContent = 'Step 2 of 2';
+      document.getElementById('modalTitle').textContent = 'Review domains';
+      document.getElementById('modalSubtitle').textContent = 'Confirm the domains you want to track';
+      document.getElementById('btnBack').style.display = '';
+      document.getElementById('btnCancel').style.display = 'none';
+      document.getElementById('dot1').className = 'step-dot done';
+      document.getElementById('dot2').className = 'step-dot active';
+      document.getElementById('btnNext').disabled = false;
+
+      var raw = document.getElementById('domainInput').value;
+      var all = raw.split(/[\n,]+/).map(function(d) { return d.trim().toLowerCase(); }).filter(Boolean);
+      var valid = all.filter(isValid);
+      var invalid = all.filter(function(d) { return !isValid(d); });
+      pendingDomains = valid;
+
+      document.getElementById('previewCount').innerHTML = '<strong>' + valid.length + ' domain' + (valid.length !== 1 ? 's' : '') + '</strong> ready to add';
+      document.getElementById('previewBody').innerHTML = valid.map(function(d) {
+        var ns = namesiloPice(d);
+        var reg = REGISTRARS[Math.abs(d.charCodeAt(0) - 97) % REGISTRARS.length];
+        return '<tr><td><strong>' + d + '</strong></td><td><span class="reg-badge">' + reg + '</span></td>' +
+          '<td><span class="from-price"><span class="from-label">from</span> $' + ns + '</span></td></tr>';
+      }).join('');
+
+      if (invalid.length) {
+        document.getElementById('previewWarning').style.display = 'flex';
+        document.getElementById('previewWarningText').textContent = invalid.length + ' skipped (invalid): ' + invalid.join(', ');
+      } else {
+        document.getElementById('previewWarning').style.display = 'none';
+      }
+      document.getElementById('btnNext').innerHTML = '<span>Add ' + valid.length + ' domain' + (valid.length !== 1 ? 's' : '') + '</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    } else if (step === 3) {
+      s3.style.display = '';
+      dots.style.display = 'none';
+      document.getElementById('stepLabel').textContent = '';
+      document.getElementById('modalTitle').textContent = '';
+      document.getElementById('modalSubtitle').textContent = '';
+      document.getElementById('btnCancel').style.display = 'none';
+      document.getElementById('btnNext').innerHTML = '<span>Go to External Domains</span>';
+      document.getElementById('btnNext').disabled = false;
+      document.getElementById('successTitle').textContent = pendingDomains.length + ' domain' + (pendingDomains.length !== 1 ? 's' : '') + ' added!';
+    }
+  }
+
+  document.getElementById('btnBack').addEventListener('click', function() { step--; renderStep(); });
+
+  document.getElementById('btnNext').addEventListener('click', function() {
+    if (step === 3) {
+      closeModal('addModal');
+      renderTable();
+      return;
+    }
+    if (step === 2) {
+      pendingDomains.forEach(function(d) {
+        if (!domains.find(function(x) { return x.domain === d; })) {
+          var ns = namesiloPice(d);
+          var cur = currentPrice(d, ns);
+          var reg = REGISTRARS[Math.abs(d.charCodeAt(0) - 97) % REGISTRARS.length];
+          domains.push({ domain: d, registrar: reg, nsPrice: ns, curPrice: cur, savings: (cur - parseFloat(ns)).toFixed(2) });
+        }
+      });
+    }
+    step++;
+    renderStep();
+  });
+
+  // ── Edit ──────────────────────────────────────────────────
+  function openEdit(domain, registrar) {
+    activeDomain = domain;
+    document.getElementById('editDomainLabel').textContent = domain;
+    document.getElementById('editRegistrar').value = registrar;
+    document.getElementById('editExpiry').value = '';
+    closeAllDd();
+    openModal('editModal');
+  }
+  function saveEdit() {
+    var reg = document.getElementById('editRegistrar').value.trim();
+    var exp = document.getElementById('editExpiry').value;
+    if (activeDomain) {
+      var d = domains.find(function(x) { return x.domain === activeDomain; });
+      if (d) {
+        if (reg) d.registrar = reg;
+        if (exp) d.expiry = new Date(exp).toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'});
+      }
+    }
+    closeModal('editModal');
+    renderTable();
+    showToast('Details updated');
+  }
+
+  // ── Reminder ──────────────────────────────────────────────
+  function openReminder(domain) {
+    activeDomain = domain;
+    document.getElementById('reminderDomainLabel').textContent = domain;
+    document.getElementById('reminderEmail').value = '';
+    closeAllDd();
+    openModal('reminderModal');
+  }
+  function selectChip(chip) {
+    chip.closest('.reminder-options').querySelectorAll('.reminder-chip').forEach(function(c) { c.classList.remove('selected'); });
+    chip.classList.add('selected');
+  }
+  function saveReminder() {
+    closeModal('reminderModal');
+    showToast('Renewal reminder set');
+  }
+
+  // ── WHOIS ─────────────────────────────────────────────────
+  function viewWhois(domain) {
+    closeAllDd();
+    window.open('https://www.whois.com/whois/' + domain, '_blank');
+  }
+
+  // ── Remove ────────────────────────────────────────────────
+  function openRemove(domain) {
+    activeDomain = domain;
+    document.getElementById('removeDomainLabel').textContent = domain;
+    document.getElementById('removeDomainName').textContent = domain;
+    closeAllDd();
+    openModal('removeModal');
+  }
+  function confirmRemove() {
+    domains = domains.filter(function(d) { return d.domain !== activeDomain; });
+    closeModal('removeModal');
+    if (domains.length === 0) {
+      document.getElementById('tableView').style.display = 'none';
+      document.getElementById('emptyState').style.display = '';
+    } else {
+      renderTable();
+    }
+    showToast('Domain removed');
+  }
+</script>
+
+</body>
+</html>
