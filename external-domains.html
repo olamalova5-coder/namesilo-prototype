@@ -386,11 +386,8 @@
       transition: background 0.12s; font-family: inherit;
     }
     .renew-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%), #0090d4; }
-    .renew-price {
-      margin-left: 4px; padding-left: 7px;
-      border-left: 1px solid rgba(255,255,255,0.35);
-      font-size: 11.5px; font-weight: 600; opacity: 0.95;
-    }
+    .ns-price { font-size: 13px; font-weight: 600; color: #0369a1; }
+    .ns-price-yr { font-size: 11px; font-weight: 400; color: #64748b; }
 
     .manage-btn {
       display: inline-flex; align-items: center; gap: 6px;
@@ -1003,6 +1000,7 @@
                 <th>Current Registrar</th>
                 <th>Expiration</th>
                 <th>Status</th>
+                <th>Renew with NameSilo</th>
                 <th>Connection</th>
                 <th></th>
               </tr>
@@ -1432,6 +1430,7 @@
         '<td><span class="registrar-pill"><span class="registrar-dot"></span>' + d.registrar + '</span></td>' +
         '<td><span class="exp-date ' + expClass + '">' + expDate + '</span></td>' +
         '<td><span class="status-badge ' + statusClass + '">' + statusLabel + '</span></td>' +
+        '<td>' + (d.nsPrice ? '<span class="ns-price">$' + d.nsPrice + '<span class="ns-price-yr">/yr</span></span>' : '<span style="color:#cbd5e1">—</span>') + '</td>' +
         '<td>' + renderApiStatus(d) + '</td>' +
         '<td><div class="row-actions">' +
           (d.pending
@@ -1444,7 +1443,6 @@
               : '<button class="renew-btn">' +
                   '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
                   'Renew with NameSilo' +
-                  (d.nsPrice ? '<span class="renew-price">$' + d.nsPrice + '/yr</span>' : '') +
                 '</button>'
           ) +
           '<button class="more-btn" onclick="toggleDd(this)">⋯</button>' +
