@@ -1423,10 +1423,16 @@
         '<td><span class="status-badge ' + statusClass + '">' + statusLabel + '</span></td>' +
         '<td>' + renderApiStatus(d) + '</td>' +
         '<td><div class="row-actions">' +
-          '<button class="renew-btn">' +
-            '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
-            'Renew with NameSilo' +
-          '</button>' +
+          (d.apiStatus === 'connected'
+            ? '<button class="manage-btn manage-btn--connected">' +
+                '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
+                'Manage with NameSilo' +
+              '</button>'
+            : '<button class="renew-btn">' +
+                '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+                'Renew with NameSilo' +
+              '</button>'
+          ) +
           '<button class="more-btn" onclick="toggleDd(this)">⋯</button>' +
           '<div class="row-dropdown">' +
             '<div class="dd-item" onclick="connectApi(\'' + d.domain + '\')">' +
