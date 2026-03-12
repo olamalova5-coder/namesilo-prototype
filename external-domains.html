@@ -1488,6 +1488,13 @@
           ) +
           '<button class="more-btn" onclick="toggleDd(this)">⋯</button>' +
           '<div class="row-dropdown">' +
+            (d.apiStatus === 'connected'
+              ? '<div class="dd-item" onclick="">' +
+                  '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' +
+                  'Manage' +
+                '</div>'
+              : ''
+            ) +
             '<div class="dd-item" onclick="connectApi(\'' + d.domain + '\')">' +
               '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
               (d.apiStatus === 'connected' ? 'Disconnect API' : 'Connect API') +
