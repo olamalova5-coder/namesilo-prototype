@@ -410,6 +410,19 @@
       content: ''; width: 6px; height: 6px; border-radius: 50%; background: #16a34a; flex-shrink: 0;
     }
 
+    /* ─── API status column badges ──────────────────────────── */
+    .api-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500; border-radius: 20px;
+      padding: 3px 9px; white-space: nowrap;
+    }
+    .api-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .api-connected { background: #dcfce7; color: #166534; }
+    .api-connected .api-dot { background: #16a34a; }
+    .api-problem { background: #fef2f2; color: #991b1b; }
+    .api-problem .api-dot { background: #ef4444; }
+    .api-none { background: #f1f5f9; color: #64748b; }
+
     .api-connected-pill {
       display: inline-flex; align-items: center; gap: 4px;
       font-size: 11px; font-weight: 500; color: #166534;
@@ -983,6 +996,7 @@
                 <th>Current Registrar</th>
                 <th>Expiration</th>
                 <th>Status</th>
+                <th>API</th>
                 <th></th>
               </tr>
             </thead>
@@ -1295,6 +1309,16 @@
   function currentPrice(d, ns) {
     return (parseFloat(ns) * (1.3 + (d.charCodeAt(2) % 10) / 20)).toFixed(2);
   }
+  function renderApiStatus(d) {
+    if (d.apiStatus === 'connected') {
+      return '<span class="api-badge api-connected"><span class="api-dot"></span>Connected</span>';
+    } else if (d.apiStatus === 'problem') {
+      return '<span class="api-badge api-problem"><span class="api-dot"></span>Issue</span>';
+    } else {
+      return '<span class="api-badge api-none">Not connected</span>';
+    }
+  }
+
   function getStatus(d) {
     var n = d.length % 4;
     return n === 0 ? 'expiring' : n === 1 ? 'expired' : n === 2 ? 'restore' : 'active';
@@ -1394,32 +1418,21 @@
       return '<tr>' +
         '<td><input type="checkbox" class="checkbox"></td>' +
         '<td><span class="domain-cell">' + d.domain + '</span></td>' +
-        '<td><span class="registrar-pill"><span class="registrar-dot"></span>' + d.registrar + '</span>' + (d.connected ? '<span class="api-connected-pill">Connected</span>' : '') + '</td>' +
+        '<td><span class="registrar-pill"><span class="registrar-dot"></span>' + d.registrar + '</span></td>' +
         '<td><span class="exp-date ' + expClass + '">' + expDate + '</span></td>' +
         '<td><span class="status-badge ' + statusClass + '">' + statusLabel + '</span></td>' +
+        '<td>' + renderApiStatus(d) + '</td>' +
         '<td><div class="row-actions">' +
-          (d.connected
-            ? '<button class="manage-btn manage-btn--connected" onclick="connectApi(\'' + d.domain + '\')">' +
-                '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
-                'Manage with NameSilo' +
-              '</button>'
-            : '<button class="renew-btn">' +
-                '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
-                'Renew with NameSilo' +
-              '</button>'
-          ) +
+          '<button class="renew-btn">' +
+            '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+            'Renew with NameSilo' +
+          '</button>' +
           '<button class="more-btn" onclick="toggleDd(this)">⋯</button>' +
           '<div class="row-dropdown">' +
-            (d.connected
-              ? '<div class="dd-item" onclick="">' +
-                  '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
-                  'Renew with NameSilo' +
-                '</div>'
-              : '<div class="dd-item" onclick="connectApi(\'' + d.domain + '\')">' +
-                  '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
-                  'Manage with NameSilo' +
-                '</div>'
-            ) +
+            '<div class="dd-item" onclick="connectApi(\'' + d.domain + '\')">' +
+              '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
+              (d.apiStatus === 'connected' ? 'Disconnect API' : 'Connect API') +
+            '</div>' +
             '<div class="dd-item" onclick="openReminder(\'' + d.domain + '\')">' +
               '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>' +
               'Set renewal reminder' +
@@ -1428,13 +1441,6 @@
               '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
               'View WHOIS' +
             '</div>' +
-            (d.connected
-              ? '<div class="dd-item" onclick="connectApi(\'' + d.domain + '\')">' +
-                  '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
-                  'Disconnect API' +
-                '</div>'
-              : ''
-            ) +
             '<div class="dd-divider"></div>' +
             '<div class="dd-item danger" onclick="openRemove(\'' + d.domain + '\')">' +
               '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
@@ -1686,7 +1692,8 @@
           var ns = namesiloPice(d);
           var cur = currentPrice(d, ns);
           var reg = REGISTRARS[Math.abs(d.charCodeAt(0) - 97) % REGISTRARS.length];
-          domains.push({ domain: d, registrar: reg, nsPrice: ns, curPrice: cur, savings: (cur - parseFloat(ns)).toFixed(2), connected: false });
+          var apiStatus = ['none','connected','problem'][domains.length % 3];
+          domains.push({ domain: d, registrar: reg, nsPrice: ns, curPrice: cur, savings: (cur - parseFloat(ns)).toFixed(2), apiStatus: apiStatus });
         }
       });
     }
@@ -1740,7 +1747,7 @@
     closeAllDd();
     var d = domains.find(function(x) { return x.domain === domain; });
     if (!d) return;
-    d.connected = !d.connected;
+    d.apiStatus = d.apiStatus === 'connected' ? 'none' : 'connected';
     renderTable();
   }
 
