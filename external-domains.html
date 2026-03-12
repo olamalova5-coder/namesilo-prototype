@@ -538,6 +538,14 @@
       transition: border-color 0.15s, box-shadow 0.15s;
     }
     .form-input:focus { border-color: #00a6f4; box-shadow: 0 0 0 3px rgba(0,166,244,0.12); }
+    .form-input:disabled { background: #f8fafc; color: #94a3b8; cursor: default; }
+    .form-hint { font-size: 12px; color: #64748b; margin-top: 5px; }
+    .connect-api-info {
+      display: flex; gap: 8px; align-items: flex-start;
+      background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px;
+      padding: 10px 12px; font-size: 13px; color: #0369a1; margin-bottom: 4px;
+    }
+    .connect-api-info svg { flex-shrink: 0; margin-top: 1px; }
 
     /* Textarea */
     .domain-textarea {
@@ -1189,6 +1197,45 @@
   </div>
 </div>
 
+<!-- ═══ MODAL: CONNECT API ═══ -->
+<div class="modal-backdrop" id="connectApiModal">
+  <div class="modal-box sm">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h2 class="modal-title">Connect API</h2>
+        <p class="modal-subtitle" id="connectApiDomainLabel"></p>
+      </div>
+      <button class="modal-close-btn" onclick="closeModal('connectApiModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="connect-api-info">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Enter the API key from your registrar to let NameSilo manage this domain on your behalf.</span>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Registrar</label>
+        <input class="form-input" id="connectApiRegistrar" type="text" disabled />
+      </div>
+      <div class="form-field">
+        <label class="form-label">API Key</label>
+        <input class="form-input" id="connectApiKey" type="text" placeholder="Paste your API key here" />
+        <p class="form-hint" id="connectApiHint"></p>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <div class="modal-footer-right">
+        <button class="btn-ghost" onclick="closeModal('connectApiModal')">Cancel</button>
+        <button class="btn-primary" onclick="saveConnectApi()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Connect
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ SUB-MODAL: ADD DOMAINS ═══ -->
 <div class="sub-modal-backdrop" id="subModal">
   <div class="sub-modal-box">
@@ -1757,8 +1804,36 @@
     closeAllDd();
     var d = domains.find(function(x) { return x.domain === domain; });
     if (!d) return;
-    d.apiStatus = d.apiStatus === 'connected' ? 'none' : 'connected';
+    if (d.apiStatus === 'connected') {
+      d.apiStatus = 'none';
+      renderTable();
+      showToast('API disconnected for ' + domain);
+      return;
+    }
+    activeDomain = domain;
+    document.getElementById('connectApiDomainLabel').textContent = domain;
+    document.getElementById('connectApiRegistrar').value = d.registrar;
+    document.getElementById('connectApiKey').value = '';
+    var hints = {
+      'GoDaddy': 'Find your API key at GoDaddy → Account → API Keys',
+      'Namecheap': 'Find your API key at Namecheap → Profile → Tools → API Access',
+      'Google Domains': 'Find your API key at Google Domains → Security → API'
+    };
+    document.getElementById('connectApiHint').textContent = hints[d.registrar] || 'Find your API key in your registrar account settings.';
+    openModal('connectApiModal');
+  }
+
+  function saveConnectApi() {
+    var key = document.getElementById('connectApiKey').value.trim();
+    if (!key) {
+      document.getElementById('connectApiKey').focus();
+      return;
+    }
+    var d = domains.find(function(x) { return x.domain === activeDomain; });
+    if (d) { d.apiStatus = 'connected'; }
+    closeModal('connectApiModal');
     renderTable();
+    showToast('API connected for ' + activeDomain);
   }
 
   // ── WHOIS ─────────────────────────────────────────────────
