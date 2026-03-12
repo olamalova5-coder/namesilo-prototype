@@ -284,6 +284,35 @@
     }
     .no-results svg { margin-bottom: 10px; color: #cbd5e1; }
 
+    /* ─── Bulk action bar ────────────────────────────────────── */
+    .bulk-bar {
+      display: none; align-items: center; gap: 12px;
+      padding: 10px 16px; background: #052f4a; border-radius: 10px;
+      margin-bottom: 8px; animation: bulkIn 0.18s ease;
+    }
+    .bulk-bar.visible { display: flex; }
+    @keyframes bulkIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .bulk-count {
+      font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; margin-right: 4px;
+    }
+    .bulk-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+    .bulk-action {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 7px; border: none;
+      background: rgba(255,255,255,0.1); color: #fff;
+      font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit;
+      transition: background 0.12s; white-space: nowrap;
+    }
+    .bulk-action:hover { background: rgba(255,255,255,0.2); }
+    .bulk-action.danger { color: #fca5a5; }
+    .bulk-action.danger:hover { background: rgba(220,38,38,0.25); }
+    .bulk-deselect {
+      margin-left: auto; background: none; border: none;
+      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 18px; line-height: 1;
+      padding: 2px 4px; border-radius: 4px; transition: color 0.12s;
+    }
+    .bulk-deselect:hover { color: #fff; }
+
     /* ─── Table ─────────────────────────────────────────────── */
     .table-scroll { overflow-x: auto; }
     .ext-table { width: 100%; border-collapse: collapse; }
@@ -782,6 +811,30 @@
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add External Domains
         </button>
+      </div>
+
+      <!-- Bulk action bar -->
+      <div class="bulk-bar" id="bulkBar">
+        <span class="bulk-count" id="bulkCount">0 selected</span>
+        <div class="bulk-divider"></div>
+        <button class="bulk-action" id="bulkTransfer">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Transfer to NameSilo
+        </button>
+        <button class="bulk-action" id="bulkReminder">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Set reminder
+        </button>
+        <button class="bulk-action" id="bulkExport">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+        <div class="bulk-divider"></div>
+        <button class="bulk-action danger" id="bulkRemove">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Remove
+        </button>
+        <button class="bulk-deselect" id="bulkDeselect" title="Deselect all">✕</button>
       </div>
 
       <div class="table-card">
@@ -1424,6 +1477,79 @@
     }
     showToast('Domain removed');
   }
+
+  // ── Bulk actions ──────────────────────────────────────────
+  function getChecked() {
+    return Array.from(document.querySelectorAll('#tableBody .checkbox:checked'));
+  }
+
+  function updateBulkBar() {
+    var checked = getChecked();
+    var bar = document.getElementById('bulkBar');
+    var count = checked.length;
+    bar.classList.toggle('visible', count > 0);
+    document.getElementById('bulkCount').textContent = count + ' selected';
+    // sync header checkbox
+    var all = document.querySelectorAll('#tableBody .checkbox');
+    var ca = document.getElementById('checkAll');
+    if (ca) {
+      ca.checked = all.length > 0 && count === all.length;
+      ca.indeterminate = count > 0 && count < all.length;
+    }
+  }
+
+  document.getElementById('tableBody').addEventListener('change', function(e) {
+    if (e.target.classList.contains('checkbox')) updateBulkBar();
+  });
+
+  document.getElementById('checkAll').addEventListener('change', function() {
+    document.querySelectorAll('#tableBody .checkbox').forEach(function(cb) {
+      cb.checked = document.getElementById('checkAll').checked;
+    });
+    updateBulkBar();
+  });
+
+  function getSelectedDomains() {
+    return getChecked().map(function(cb) {
+      return cb.closest('tr').querySelector('.domain-cell').textContent.trim();
+    });
+  }
+
+  document.getElementById('bulkDeselect').addEventListener('click', function() {
+    document.querySelectorAll('#tableBody .checkbox, #checkAll').forEach(function(cb) { cb.checked = false; });
+    updateBulkBar();
+  });
+
+  document.getElementById('bulkTransfer').addEventListener('click', function() {
+    var sel = getSelectedDomains();
+    showToast('Starting transfer for ' + sel.length + ' domain' + (sel.length !== 1 ? 's' : ''));
+  });
+
+  document.getElementById('bulkReminder').addEventListener('click', function() {
+    var sel = getSelectedDomains();
+    showToast('Reminder set for ' + sel.length + ' domain' + (sel.length !== 1 ? 's' : ''));
+  });
+
+  document.getElementById('bulkExport').addEventListener('click', function() {
+    var sel = getSelectedDomains();
+    showToast('Exported ' + sel.length + ' domain' + (sel.length !== 1 ? 's' : ''));
+  });
+
+  document.getElementById('bulkRemove').addEventListener('click', function() {
+    var sel = getSelectedDomains();
+    if (!confirm('Remove ' + sel.length + ' domain' + (sel.length !== 1 ? 's' : '') + '?')) return;
+    sel.forEach(function(d) {
+      domains = domains.filter(function(x) { return x.domain !== d; });
+    });
+    document.getElementById('bulkDeselect').click();
+    if (domains.length === 0) {
+      document.getElementById('tableView').style.display = 'none';
+      document.getElementById('emptyState').style.display = '';
+    } else {
+      renderTable();
+    }
+    showToast(sel.length + ' domain' + (sel.length !== 1 ? 's' : '') + ' removed');
+  });
 
   // ── FAQ accordion ──────────────────────────────────────────
   document.querySelectorAll('.faq-q').forEach(function(q) {
