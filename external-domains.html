@@ -193,6 +193,14 @@
     }
     .btn-ghost:hover { background: #f8fafc; }
     .btn-danger {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 36px; padding: 0 16px; border-radius: 8px;
+      background: #dc2626; color: #fff; border: none;
+      font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+      transition: background 0.12s;
+    }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-danger {
       background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%), #dc2626;
       color: #fff; border: none; border-radius: 10px; padding: 9px 18px;
       font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
@@ -1201,6 +1209,37 @@
   </div>
 </div>
 
+<!-- ═══ MODAL: DISCONNECT API ═══ -->
+<div class="modal-backdrop" id="disconnectApiModal">
+  <div class="modal-box sm">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h2 class="modal-title">Disconnect API</h2>
+        <p class="modal-subtitle" id="disconnectApiDomainLabel"></p>
+      </div>
+      <button class="modal-close-btn" onclick="closeModal('disconnectApiModal')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="remove-warning">
+        <div class="remove-warning-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="remove-warning-text">
+          NameSilo will lose access to manage this domain at your registrar. You can reconnect at any time by adding your API key again.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <div class="modal-footer-right">
+        <button class="btn-ghost" onclick="closeModal('disconnectApiModal')">Cancel</button>
+        <button class="btn-danger" onclick="confirmDisconnectApi()">Disconnect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ MODAL: CONNECT API ═══ -->
 <div class="modal-backdrop" id="connectApiModal">
   <div class="modal-box sm">
@@ -1816,9 +1855,9 @@
     var d = domains.find(function(x) { return x.domain === domain; });
     if (!d) return;
     if (d.apiStatus === 'connected') {
-      d.apiStatus = 'none';
-      renderTable();
-      showToast('API disconnected for ' + domain);
+      activeDomain = domain;
+      document.getElementById('disconnectApiDomainLabel').textContent = domain;
+      openModal('disconnectApiModal');
       return;
     }
     activeDomain = domain;
@@ -1832,6 +1871,14 @@
     };
     document.getElementById('connectApiHint').textContent = hints[d.registrar] || 'Find your API key in your registrar account settings.';
     openModal('connectApiModal');
+  }
+
+  function confirmDisconnectApi() {
+    var d = domains.find(function(x) { return x.domain === activeDomain; });
+    if (d) { d.apiStatus = 'none'; }
+    closeModal('disconnectApiModal');
+    renderTable();
+    showToast('API disconnected for ' + activeDomain);
   }
 
   function saveConnectApi() {
